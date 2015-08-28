@@ -1,0 +1,42 @@
+<p id="notice"><%= notice %></p>
+
+
+<p>
+  <b>Start date:</b>
+  <%= @attendance.start_date %>
+</p>
+
+<p>
+  <b>Days:</b>
+  <%= @attendance.days %>
+</p>
+
+<p>
+  <b>Leave Type</b>
+  <%= @attendance.is_leave_or_wfh ? "Leave" : "Work From Home" %>
+</p>
+
+<p>
+  <b>Reason:</b>
+  <%= @attendance.reason %>
+</p>
+
+<p>
+  <b>Approval status:</b>
+  <% if @attendance.approval_status.nil? %>
+  <div>Pending</div>
+    <% elsif @attendance.approval_status %>
+    <div>Approved</div>
+    <% else %>
+    <div>Rejected</div>
+    <% end %>
+</p>
+
+<p>
+  <b>Comments:</b>
+  <%= @attendance.comments %>
+</p>
+
+
+<%= link_to 'Edit', edit_attendance_path(@attendance) %> |
+<%= link_to 'Back', attendances_path %>

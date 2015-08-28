@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  user_id: 1
+  start_date: 2015-08-28
+  days: 1
+  is_leave_or_wfh: false
+  reason: MyText
+  approval_status: false
+  comments: MyText
+
+two:
+  user_id: 1
+  start_date: 2015-08-28
+  days: 1
+  is_leave_or_wfh: false
+  reason: MyText
+  approval_status: false
+  comments: MyText

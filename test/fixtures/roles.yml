@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  working_days: 1
+  name: MyString
+  leaves_applicable: 1
+
+two:
+  working_days: 1
+  name: MyString
+  leaves_applicable: 1

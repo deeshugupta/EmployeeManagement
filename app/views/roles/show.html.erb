@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Working days:</b>
+  <%= @role.working_days %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @role.name %>
+</p>
+
+<p>
+  <b>Leaves applicable:</b>
+  <%= @role.leaves_applicable %>
+</p>
+
+
+<%= link_to 'Edit', edit_role_path(@role) %> |
+<%= link_to 'Back', roles_path %>
