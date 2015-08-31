@@ -1,14 +1,11 @@
 class RolesController < ApplicationController
+  include RolesHelper
   before_filter :is_admin!
   # GET /roles
   # GET /roles.json
   def index
     @roles = Role.all
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @roles }
-    end
   end
 
   # GET /roles/1
@@ -42,13 +39,10 @@ class RolesController < ApplicationController
   # POST /roles.json
   def create
     @role = Role.new(params[:role])
-
-    respond_to do |format|
-      if @role.save
-         redirect_to :action => 'index', :notice => "role successfully created"
-      else
-        redirect_to :action => 'new'
-      end
+    if @role.save
+      redirect_to :action => 'index', :notice => "role successfully created"
+    else
+      redirect_to :action => 'new'
     end
   end
 
@@ -81,10 +75,9 @@ class RolesController < ApplicationController
   end
 
   def is_admin!
-    if current_user.roles.include?(Role.find_by_name(:admin))
-      render 'index'
-    else
-      redirect_to  "/404.html"
+
+    if !(is_admin)
+      redirect_to "/404.html"
     end
   end
 end

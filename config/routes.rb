@@ -1,12 +1,13 @@
 EmployeeManagement::Application.routes.draw do
 
+  devise_for :users
   root :to => 'dashboard#index'
-  match ':controller(/:action(/:id))(.:format)'
   resources :roles
-
   resources :attendances
 
-  devise_for :users
+  match ':controller(/:action(:/id))'
+
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

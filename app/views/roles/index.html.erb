@@ -5,9 +5,8 @@
     <th>Working days</th>
     <th>Name</th>
     <th>Leaves applicable</th>
-    <th></th>
-    <th></th>
-    <th></th>
+    <th>Actions</th>
+
   </tr>
 
 <% @roles.each do |role| %>
@@ -15,9 +14,9 @@
     <td><%= role.working_days %></td>
     <td><%= role.name %></td>
     <td><%= role.leaves_applicable %></td>
-    <td><%= link_to 'Show', role %></td>
-    <td><%= link_to 'Edit', edit_role_path(role) %></td>
-    <td><%= link_to 'Destroy', role, confirm: 'Are you sure?', method: :delete %></td>
+    <td><%= link_to 'Show', role,:class=>"actions" %>
+    <%= link_to 'Edit', edit_role_path(role),:class=>"actions" %>
+    <%= link_to 'Destroy', role, confirm: 'Are you sure?', method: :delete ,:class=>"actions"%></td>
   </tr>
 <% end %>
 </table>

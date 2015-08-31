@@ -21,16 +21,6 @@ class AttendancesController < ApplicationController
     end
   end
 
-  # GET /attendances/new
-  # GET /attendances/new.json
-  def new
-    @attendance = Attendance.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @attendance }
-    end
-  end
 
   # GET /attendances/1/edit
   def edit
@@ -62,7 +52,7 @@ class AttendancesController < ApplicationController
 
     respond_to do |format|
       if @attendance.update_attributes(params[:attendance])
-        format.html { redirect_to @attendance, notice: 'Attendance was successfully updated.' }
+        format.html { redirect_to :controller=> 'dashboard', notice: 'Attendance was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -75,11 +65,9 @@ class AttendancesController < ApplicationController
   # DELETE /attendances/1.json
   def destroy
     @attendance = Attendance.find(params[:id])
-    @attendance.destroy
-
-    respond_to do |format|
-      format.html { redirect_to attendances_url }
-      format.json { head :no_content }
+    if @attendance.destroy
+      redirect_to :controller => 'dashboard', :notice => "Attendance Deleted successfully"
     end
+
   end
 end

@@ -1,31 +1,21 @@
+<% if is_admin %>
+    | <%= link_to "Manage Roles", {:controller => 'roles'}, :class => 'navbar-link' %>
+<% end %>
 <br/><br/>
 <br/><button type="button" class="tab_button" name="pending_requests">View Pending Requests</button>
 
 <button type="button" class="tab_button" name="new_request">Submit New Request</button>
 
 <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
-    <button type="button" class="tab_button" name="see_requests">View to be approved</button>
+    <button type="button" class="tab_button" name="see_requests">Approvals</button>
 <% end %>
 <br/>
 <br/>
 <br/>
 
-<div id="pending_requests" class="content_section" style="display: block;">
-  this is test
-<hr/>
-</div>
-
-<div id="new_request" class="content_section" style="display: none;">
-<%= render :partial => "attendances/form" %>
-</div>
-
-<div id="see_requests" class="content_section" style="display: none;">
-  <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
+<div id="pending_requests" class="content_section" style="display: none;">
   <table>
     <tr>
-      <td>
-        Name
-      </td>
       <td>
         Date
       </td>
@@ -35,8 +25,59 @@
       <td>
         Status
       </td>
+      <td>
+        Actions
+      </td>
     </tr>
-    <% current_user.approvals.each do |approval|%>
+    <% current_user.attendances.each do |attendance|%>
+        <tr>
+          <td>
+            <%= attendance.start_date %>
+          </td>
+          <td>
+            <%= attendance.days %>
+          </td>
+          <td>
+            <%= current_status(attendance) %>
+          </td>
+          <td>
+            <%=link_to("edit", {:controller => 'attendances', :action => 'edit', :id => attendance.id},:class=>"actions") %>
+            <%=link_to("delete", {:controller => 'attendances', :action => 'destroy', :id => attendance.id},:method=> :delete,:class=>"actions") %>
+          </td>
+        </tr>
+    <% end %>
+
+  </table>
+</div>
+
+<div id="new_request" class="content_section" style="display: none;">
+  <%= form_for(@attendance, :url => 'attendances') do |f| %>
+      <%= render :partial => 'attendances/form', :locals =>  {:f =>f} %>
+  <%end%>
+
+</div>
+
+<div id="see_requests" class="content_section" style="display: none;">
+  <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
+  <table>
+    <tr>
+      <th>
+        Name
+      </th>
+      <th>
+        Date
+      </th>
+      <th>
+        Days
+      </th>
+      <th>
+        Status
+      </th>
+      <th>
+        Actions
+      </th>
+    </tr>
+    <% current_user.approvals.where(approval_status: nil).each do |approval|%>
     <tr>
       <td>
         <%= approval.user.name %>
@@ -50,6 +91,24 @@
       <td>
         <%= current_status(approval) %>
       </td>
+      <td id="approval<%= approval.id%>">
+
+        <button class="approvals">Approve</button>
+        <button class="approvals">Reject</button>
+        <button class="approvals">Comment</button>
+
+        <%= form_for(@attendance,:remote=>true, :url =>"dashboard/approve", :html=>{:class => "approval_comments"} ) do |f|%>
+            <div class="field">
+              <%= f.label :comments %><br />
+              <%= f.text_area :comments, :cols=>20, :rows=>10 %>
+            </div>
+            <%= hidden_field_tag("approval_type","") %>
+            <%= hidden_field_tag("approval_id",approval.id) %>
+
+              <%= f.submit "OK" %>
+        <% end %>
+
+      </td>
     </tr>
     <% end %>
 
@@ -61,5 +120,6 @@
 <script>
   $(document).ready(function() {
       attach_Click_event();
+      click_approval();
   })
 </script>

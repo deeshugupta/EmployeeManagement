@@ -1,0 +1,7 @@
+
+$(document).ready(function() {
+        $(".approval_comments").bind("ajax:success", function () {
+            $(this).parent().parent().remove();
+        });
+
+})
