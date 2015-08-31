@@ -1,4 +1,60 @@
+<br/><br/>
+<br/><button type="button" class="tab_button" name="pending_requests">View Pending Requests</button>
 
-<br/><%= link_to("View Pending Requests","#") %><br/>
+<button type="button" class="tab_button" name="new_request">Submit New Request</button>
 
-<%= link_to("Submit a new Request", :controller => :attendances, :action => 'new') %><br/>
+<% if current_user.roles.include?(Role.find_by_name(:manager)) %>
+    <button type="button" class="tab_button" name="see_requests">View to be approved</button>
+<% end %>
+<br/>
+<br/>
+<br/>
+
+<div id="pending_requests" class="content_section" style="display: block;">
+  this is test
+<hr/>
+</div>
+
+<div id="new_request" class="content_section" style="display: none;">
+<%= render :partial => "attendances/form" %>
+</div>
+
+<div id="see_requests" class="content_section" style="display: none;">
+  <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
+  <table>
+    <tr>
+      <td>
+        Name
+      </td>
+      <td>
+        Date
+      </td>
+      <td>
+        Days
+      </td>
+      <td>
+        Status
+      </td>
+    </tr>
+    <% current_user.approvals.each do |approval|%>
+    <tr>
+      <td>
+        <%= approval.user.name %>
+      </td>
+      <td>
+        <%= approval.start_date %>
+      </td>
+      <td>
+        <%= approval.days %>
+      </td>
+      <td>
+        <%= current_status(approval) %>
+      </td>
+    </tr>
+    <% end %>
+
+  </table>
+  <% end %>
+
+</div>
+

@@ -1,4 +1,5 @@
 class RolesController < ApplicationController
+  before_filter :is_admin!
   # GET /roles
   # GET /roles.json
   def index
@@ -44,11 +45,9 @@ class RolesController < ApplicationController
 
     respond_to do |format|
       if @role.save
-        format.html { redirect_to @role, notice: 'Role was successfully created.' }
-        format.json { render json: @role, status: :created, location: @role }
+         redirect_to :action => 'index', :notice => "role successfully created"
       else
-        format.html { render action: "new" }
-        format.json { render json: @role.errors, status: :unprocessable_entity }
+        redirect_to :action => 'new'
       end
     end
   end
@@ -78,6 +77,14 @@ class RolesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to roles_url }
       format.json { head :no_content }
+    end
+  end
+
+  def is_admin!
+    if current_user.roles.include?(Role.find_by_name(:admin))
+      render 'index'
+    else
+      redirect_to  "/404.html"
     end
   end
 end

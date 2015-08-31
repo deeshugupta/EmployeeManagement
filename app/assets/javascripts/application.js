@@ -12,4 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.sliderTabs
+//= require jquery.sliderTabs.min
+//= require helper
 //= require_tree .

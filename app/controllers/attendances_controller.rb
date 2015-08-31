@@ -41,10 +41,12 @@ class AttendancesController < ApplicationController
   # POST /attendances.json
   def create
     @attendance = Attendance.new(params[:attendance])
+    @attendance.user = current_user
+
 
     respond_to do |format|
       if @attendance.save
-        format.html { redirect_to @attendance, notice: 'Attendance was successfully created.' }
+        format.html { redirect_to :controller=> 'dashboard' }
         format.json { render json: @attendance, status: :created, location: @attendance }
       else
         format.html { render action: "new" }

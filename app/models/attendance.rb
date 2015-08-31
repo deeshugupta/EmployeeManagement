@@ -12,3 +12,4 @@ class Attendance < ActiveRecord::Base
     end
   end
 end
+
