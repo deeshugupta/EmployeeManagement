@@ -17,10 +17,10 @@
   <table>
     <tr>
       <td>
-        Date
+        From Date
       </td>
       <td>
-        Days
+        To Date
       </td>
       <td>
         Status
@@ -32,18 +32,21 @@
     <% current_user.attendances.each do |attendance|%>
         <tr>
           <td>
-            <%= attendance.start_date %>
+            <%= date_format(attendance.start_date) %>
           </td>
           <td>
-            <%= attendance.days %>
+            <%= date_format(attendance.start_date + attendance.days.days) %>
           </td>
           <td>
-            <%= current_status(attendance) %>
+            <%= attendance_current_status(attendance) %>
           </td>
           <td>
+            <%= link_to("show",{:controller => 'attendances', :action => 'show', :id => attendance.id},:class=>"actions")%>
+            <% if(attendance_current_status(attendance).equal?(:pending))%>
             <%=link_to("edit", {:controller => 'attendances', :action => 'edit', :id => attendance.id},:class=>"actions") %>
             <%=link_to("delete", {:controller => 'attendances', :action => 'destroy', :id => attendance.id},:method=> :delete,:class=>"actions") %>
-          </td>
+          <% end %>
+                </td>
         </tr>
     <% end %>
 
@@ -65,10 +68,10 @@
         Name
       </th>
       <th>
-        Date
+       From Date
       </th>
       <th>
-        Days
+        To Date
       </th>
       <th>
         Status
@@ -83,13 +86,13 @@
         <%= approval.user.name %>
       </td>
       <td>
-        <%= approval.start_date %>
+        <%= date_format(approval.start_date) %>
       </td>
       <td>
-        <%= approval.days %>
+        <%= date_format(approval.start_date + approval.days.days) %>
       </td>
       <td>
-        <%= current_status(approval) %>
+        <%= attendance_current_status(approval) %>
       </td>
       <td id="approval<%= approval.id%>">
 

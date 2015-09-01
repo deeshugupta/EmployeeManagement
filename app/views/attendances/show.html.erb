@@ -2,13 +2,13 @@
 
 
 <p>
-  <b>Start date:</b>
-  <%= @attendance.start_date %>
+  <b>Start Date:</b>
+  <%= date_format(@attendance.start_date) %>
 </p>
 
 <p>
-  <b>Days:</b>
-  <%= @attendance.days %>
+  <b>End Date:</b>
+  <%= date_format(@attendance.start_date+@attendance.days) %>
 </p>
 
 <p>
@@ -37,6 +37,7 @@
   <%= @attendance.comments %>
 </p>
 
-
+<% if(attendance_current_status(@attendance).equal?(:pending)) %>
 <%= link_to 'Edit', edit_attendance_path(@attendance) %> |
-<%= link_to 'Back', attendances_path %>
+    <% end %>
+<%= link_to 'Back', root_path %>

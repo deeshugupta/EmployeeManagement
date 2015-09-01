@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+<p>
+  A new Request for  <%= @attendance.is_leave_or_wfh ? "leave" : "work from home" %> has been submitted from date
+  <%= @attendance.start_date %> to <%=@attendance.start_date + @attendance.days.days%> has been submitted by <%=@attendance.user.name%>.
+  <br>
+</p>
+
+</body>
+</html>
