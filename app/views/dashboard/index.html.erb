@@ -8,7 +8,10 @@
 
 <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
     <button type="button" class="tab_button" name="see_requests">Pending Approvals</button>
+    <button type="button" class="tab_button" name="member_info">View all Members</button>
 <% end %>
+
+
 
 <%= image_tag "search_glass.png", :class => "tab_button", :name => "search_request"%>
 <br/>
@@ -98,6 +101,11 @@
   <div id="search_results">
 
   </div>
+  <span id="search_results_count" style="display: block;"></span>
+</div>
+
+<div class="content_section" id="member_info" style="display: none;">
+    
 </div>
 
 

@@ -6,6 +6,7 @@ $(document).ready(function() {
     <% if !@user_attendances.nil? & !@user_attendances.empty?%>
     <% name = @user_attendances.first.user.name%>
    $('#search_results').html("<%= escape_javascript(render(:partial => 'attendance_show', :locals=>{:attendances => @user_attendances})) %>");
+    $('#search_results_count').html("<b><%= @user_attendances.count%> results found</b>")
     <%else%>
     $('#search_results').html("No Results Found.");
     <%end%>
