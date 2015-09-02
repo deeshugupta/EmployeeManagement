@@ -21,15 +21,18 @@
     <%= f.number_field :days %>
   </div>
   <div class="field">
-    <%= f.label "Leave or work from home (By Default: Work from Home)" %><br />
-    <%= f.check_box :is_leave_or_wfh %>
+    <%= f.label "Leave or work from home?" %><br />
+    <%= f.radio_button :is_leave_or_wfh, true  %>
+    <%= f.label "Leave", :value => :is_leave_or_wfh %>
+    <%= f.radio_button :is_leave_or_wfh, false  %>
+    <%= f.label "Work From Home", :value => :is_leave_or_wfh %>
   </div>
   <div class="field">
     <%= f.label :reason %><br />
-    <%= f.text_area :reason %>
+    <%= f.text_area :reason, :cols => 20, :rows=>5 %>
   </div>
 
-  <div class="actions">
+  <div>
     <%= f.submit %>
   </div>
 

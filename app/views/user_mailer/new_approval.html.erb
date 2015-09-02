@@ -5,9 +5,13 @@
 </head>
 <body>
 <p>
-  A new Request for  <%= @attendance.is_leave_or_wfh ? "leave" : "work from home" %> has been submitted from date
-  <%= @attendance.start_date %> to <%=@attendance.start_date + @attendance.days.days%> has been submitted by <%=@attendance.user.name%>.
+  A new Request for  <b><%= @attendance.is_leave_or_wfh ? "leave" : "work from home" %></b> has been submitted from date
+  <b><%= date_format(@attendance.start_date) %></b> to <b><%=date_format(@attendance.start_date + @attendance.days.days)%></b>
+  has been submitted by <b><%=@attendance.user.name%></b>.
   <br>
+</p>
+<p>
+ Reason : <%= @attendance.reason %>
 </p>
 
 </body>

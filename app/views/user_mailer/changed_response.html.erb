@@ -5,8 +5,11 @@
 </head>
 <body>
 <p>
- Your <%= @attendance.is_leave_or_wfh ? "leave" : "work from home" %> application for <%= @attendance.start_date %>
-  had been <%=attendance_current_status(@attendance)%><br>
+ Your <b><%= @attendance.is_leave_or_wfh ? "leave" : "work from home" %></b> application for <b><%= date_format(@attendance.start_date) %></b>
+  has been <b></b><%=attendance_current_status(@attendance).to_s.upcase!%></b><br>
+</p>
+<p>
+  Additional Comments: <%= @attendance.comments %>
 </p>
 
 </body>

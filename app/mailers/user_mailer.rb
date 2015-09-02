@@ -1,5 +1,6 @@
 class UserMailer < ActionMailer::Base
   add_template_helper(AttendancesHelper)
+  add_template_helper(ApplicationHelper)
   default from: "notifications@admin.tt.com"
 
   def changed_response(user, attendance)
