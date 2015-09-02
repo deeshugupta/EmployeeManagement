@@ -32,6 +32,7 @@ class AttendancesController < ApplicationController
   def create
     @attendance = Attendance.new(params[:attendance])
     @attendance.user = current_user
+    @attendance.end_date= @attendance.start_date + @attendance.days.days
 
 
     respond_to do |format|
@@ -49,6 +50,7 @@ class AttendancesController < ApplicationController
   # PUT /attendances/1.json
   def update
     @attendance = Attendance.find(params[:id])
+    @attendance.end_date= @attendance.start_date + @attendance.days.days
 
     respond_to do |format|
       if @attendance.update_attributes(params[:attendance])

@@ -3,7 +3,12 @@
  */
 
 $(document).ready(function() {
-    alert("<%= @attendances.first.user.name %>");
+    <% if !@user_attendances.nil? & !@user_attendances.empty?%>
+    <% name = @user_attendances.first.user.name%>
+   $('#search_results').html("<%= escape_javascript(render(:partial => 'attendance_show', :locals=>{:attendances => @user_attendances})) %>");
+    <%else%>
+    $('#search_results').html("No Results Found.");
+    <%end%>
 
 
 })

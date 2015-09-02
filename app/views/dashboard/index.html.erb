@@ -25,6 +25,9 @@
         To Date
       </td>
       <td>
+        Leave Type
+      </td>
+      <td>
         Status
       </td>
       <td>
@@ -37,7 +40,10 @@
             <%= date_format(attendance.start_date) %>
           </td>
           <td>
-            <%= date_format(attendance.start_date + attendance.days.days) %>
+            <%= date_format(attendance.end_date) %>
+          </td>
+          <td>
+            <%= attendance.is_leave_or_wfh ? "Leave" : "Work From Home" %>
           </td>
           <td>
             <%= attendance_current_status(attendance) %>
@@ -64,96 +70,39 @@
 
 <div id="see_requests" class="content_section" style="display: none;">
   <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
-  <table>
-    <tr>
-      <th>
-        Name
-      </th>
-      <th>
-       From Date
-      </th>
-      <th>
-        To Date
-      </th>
-      <th>
-        Days
-      </th>
-      <th>
-        Reason
-      </th>
-      <th>
-        Status
-      </th>
-      <th>
-        Actions
-      </th>
-    </tr>
-    <% current_user.approvals.where(approval_status: nil).each do |approval|%>
-    <tr>
-      <td>
-        <%= approval.user.name %>
-      </td>
-      <td>
-        <%= date_format(approval.start_date) %>
-      </td>
-      <td>
-        <%= date_format(approval.start_date + approval.days.days) %>
-      </td>
-      <td>
-        <%= approval.days %>
-      </td>
-      <td>
-        <%= approval.reason %>
-      </td>
-      <td>
-        <%= attendance_current_status(approval) %>
-      </td>
-      <td id="approval<%= approval.id%>">
+  <%= render(:partial => 'attendance_show', :locals => {:attendances => current_user.approvals.where(approval_status: nil)}) %>
 
-        <button class="approvals">Approve</button>
-        <button class="approvals">Reject</button>
-        <button class="approvals">Comment</button>
-
-        <%= form_for(@attendance,:remote=>true, :url =>"dashboard/approve", :html=>{:class => "approval_comments"} ) do |f|%>
-            <div class="field">
-              <%= f.label :comments %><br />
-              <%= f.text_area :comments, :cols=>10, :rows=>5 %>
-            </div>
-            <%= hidden_field_tag("approval_type","") %>
-            <%= hidden_field_tag("approval_id",approval.id) %>
-
-              <%= f.submit "OK" %>
-        <% end %>
-
-      </td>
-    </tr>
-    <% end %>
-
-  </table>
   <% end %>
 
 </div>
 
 <div class="content_section" id="search_request" style="display: none;">
+  <div>
  <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
-  <%= form_tag("dashboard/search",:remote => true,:html=>{:id=>"search_form"}) do %>
+  <%= form_tag("dashboard/search",:remote => true,:id=>"search_form") do %>
       <%= label_tag "User: " %><%= text_field_tag :name  %><br>
           <%= label_tag "Start Date: " %><%= date_select(:start,:start_date) %>
           <%= label_tag "End Date: " %><%=date_select(:end,:end_date) %><br>
           <%= label_tag "Status: " %><br/>
           <%= check_box_tag :pending %><%= label_tag "pending " %>
           <%= check_box_tag :approved %><%= label_tag "approved " %>
-          <%= check_box_tag :rejected %><%= label_tag "rejected " %>
-          <%= check_box_tag :any %><%= label_tag "any " %><br>
+          <%= check_box_tag :rejected %><%= label_tag "rejected " %><br/>
+          <%= label_tag "Leave Type: " %><br/>
+          <%= check_box_tag :leave %><%= label_tag "Leave " %>
+          <%= check_box_tag :wfh %><%= label_tag "Work From Home " %><br/>
           <%= submit_tag("search")%>
 
       <%end%>
   <% end %>
+  </div>
+  <div id="search_results">
+
+  </div>
 </div>
+
 
 <script>
   $(document).ready(function() {
       attach_Click_event();
-      click_approval();
   })
 </script>
