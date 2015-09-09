@@ -21,7 +21,6 @@ class AttendancesController < ApplicationController
     end
   end
 
-
   # GET /attendances/1/edit
   def edit
     @attendance = Attendance.find(params[:id])
@@ -33,7 +32,6 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.new(params[:attendance])
     @attendance.user = current_user
     @attendance.end_date= @attendance.start_date + @attendance.days.days
-
 
     respond_to do |format|
       if @attendance.save
@@ -70,6 +68,5 @@ class AttendancesController < ApplicationController
     if @attendance.destroy
       redirect_to :controller => 'dashboard', :notice => "Attendance Deleted successfully"
     end
-
   end
 end

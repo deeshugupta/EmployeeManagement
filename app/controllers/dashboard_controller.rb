@@ -6,6 +6,23 @@ class DashboardController < ApplicationController
     @attendance = Attendance.new
   end
 
+  def create
+    @user=User.new(params[:user])
+    params[:role].each do |id|
+      role = Role.find(id.to_i)
+      @user.roles << role
+     if @user.save!
+       redirect_to root_path
+     end
+    end
+  end
+
+  def new
+    @managers = User.all(:include => :roles, :conditions => ["roles.id = ?", 2])
+    @roles_available = Role.all
+    @user = User.new
+  end
+
   def approve
     @attendance = Attendance.find(params[:approval_id])
     approval_type = params[:approval_type]
@@ -91,5 +108,4 @@ class DashboardController < ApplicationController
       @user_attendances = @user_attendances.where(leave_type_where)
     end
   end
-
 end

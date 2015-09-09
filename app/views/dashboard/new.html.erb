@@ -1,0 +1,12 @@
+<h2>Create New User</h2>
+
+<%= form_for(@user, url: 'create')	 do |f| %>
+
+    <div>
+      <%= render :partial => 'dashboard/create_user', :locals =>  {:f =>f} %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "Add User" %>
+    </div>
+<% end %>

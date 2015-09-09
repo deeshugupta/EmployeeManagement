@@ -11,7 +11,9 @@
     <button type="button" class="tab_button" name="member_info">View all Members</button>
 <% end %>
 
-
+<% if current_user.roles.include?(Role.find_by_name(:Admin)) %>
+    <%= link_to "Create new user", {action: 'new'}  %>
+<% end %>
 
 <%= image_tag "search_glass.png", :class => "tab_button", :name => "search_request"%>
 <br/>
@@ -60,7 +62,6 @@
                 </td>
         </tr>
     <% end %>
-
   </table>
 </div>
 
@@ -68,16 +69,14 @@
   <%= form_for(@attendance, :url => 'attendances') do |f| %>
       <%= render :partial => 'attendances/form', :locals =>  {:f =>f} %>
   <%end%>
-
 </div>
 
 <div id="see_requests" class="content_section" style="display: none;">
   <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
-  <%= render(:partial => 'attendance_show', :locals => {:attendances => current_user.approvals.where(approval_status: nil)}) %>
-
+      <%= render(:partial => 'attendance_show', :locals => {:attendances => current_user.approvals.where(approval_status: nil)}) %>
   <% end %>
-
 </div>
+
 
 <div class="content_section" id="search_request" style="display: none;">
   <div>
