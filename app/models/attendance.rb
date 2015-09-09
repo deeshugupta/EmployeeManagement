@@ -20,6 +20,7 @@ class Attendance < ActiveRecord::Base
   before_create do
     UserMailer.new_approval(self.manager, self).deliver
   end
-
-
+  before_destroy do
+    UserMailer.delete_request(self.manager, self).deliver
+  end
 end

@@ -21,6 +21,15 @@ class AttendancesController < ApplicationController
     end
   end
 
+  def new
+    @attendance = Attendance.new
+    unless params[:old_id].blank?
+      attendance = Attendance.find(params[:old_id]).attributes
+      attendance.delete :id
+      @attendance.attributes = attendance
+    end
+  end
+
   # GET /attendances/1/edit
   def edit
     @attendance = Attendance.find(params[:id])

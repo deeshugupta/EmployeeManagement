@@ -3,7 +3,7 @@
 <% end %>
 <br/><br/>
 <br/>
-<button type="button" class="tab_button" name="pending_requests">View My Pending Requests</button>
+<button type="button" class="tab_button" name="pending_requests">View My Leave Requests</button>
 
 <button type="button" class="tab_button" name="new_request">Submit New Request</button>
 
@@ -57,9 +57,13 @@
           <td>
             <%= link_to("show", {:controller => 'attendances', :action => 'show', :id => attendance.id}, :class => "actions") %>
             <% if (attendance_current_status(attendance).equal?(:pending)) %>
-                <%= link_to("edit", {:controller => 'attendances', :action => 'edit', :id => attendance.id}, :class => "actions") %>
+                <%= link_to("edit", edit_attendance_path(attendance.id), :class => "actions") %>
                 <%= link_to("delete", {:controller => 'attendances', :action => 'destroy', :id => attendance.id}, :method => :delete, :class => "actions") %>
             <% end %>
+            <% if (attendance_current_status(attendance).equal?(:rejected)) %>
+                <%= link_to("resubmit", new_attendance_path(old_id: attendance.id), :class => "actions") %>
+            <% end %>
+
           </td>
         </tr>
     <% end %>
@@ -70,7 +74,6 @@
   <%= form_for(@attendance, :url => 'attendances') do |f| %>
       <%= render :partial => 'attendances/form', :locals => {:f => f} %>
   <% end %>
-
 </div>
 
 <div id="see_requests" class="content_section" style="display: none;">
@@ -78,7 +81,6 @@
       <%= render(:partial => 'attendance_show', :locals => {:attendances => current_user.approvals.where(approval_status: nil)}) %>
   <% end %>
 </div>
-
 
 <div class="content_section" id="search_request" style="display: none;">
   <div>
@@ -100,17 +102,15 @@
     <% end %>
   </div>
   <div id="search_results">
-
   </div>
   <span id="search_results_count" style="display: block;"></span>
 </div>
 
+<% if false %>
 <div class="content_section" id="member_info" style="display: none;">
-
 <%= render(:partial => 'team_member_info') %>
-
 </div>
-
+<% end %>
 
 <script>
     $(document).ready(function () {

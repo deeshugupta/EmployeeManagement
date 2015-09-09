@@ -1,6 +1,6 @@
 <h1>Submit a New Requestw</h1>
-<%= form_for(@attendance, :url => 'attendances/create') do |f| %>
-<%= render (:partial => 'form', :locals =>  {:f =>'f'}) %>
-    <%end%>
+<%= form_for(@attendance) do |f| %>
+    <%= render :partial => 'form', :locals => {:f => f} %>
+<% end %>
 
 <%= link_to 'Back', :controller => :dashboard, :action => 'index' %>

@@ -14,4 +14,11 @@ class UserMailer < ActionMailer::Base
     @attendance = attendance
     mail(:to => @user.email, :subject => "New Leave Request Submitted")
   end
+
+  def delete_request(user, attendance)
+    @user = user
+    @attendance = attendance
+    mail(:to => @user.email, :subject => "Leave Request Deleted")
+  end
+
 end
