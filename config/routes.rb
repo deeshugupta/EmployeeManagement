@@ -3,11 +3,13 @@ EmployeeManagement::Application.routes.draw do
   devise_for :users
   root :to => 'dashboard#index'
   resources :roles
-  resources :attendances
+  resources :attendances do
+    collection do
+      get :my_requests
+    end
+  end
 
   match ':controller(/:action(:/id))'
-
-
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

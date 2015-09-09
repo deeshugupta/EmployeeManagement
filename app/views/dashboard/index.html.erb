@@ -3,7 +3,8 @@
 <% end %>
 <br/><br/>
 <br/>
-<button type="button" class="tab_button" name="pending_requests">View My Leave Requests</button>
+
+<%= button_to "View My Leave Requests", my_requests_attendances_path%>
 
 <button type="button" class="tab_button" name="new_request">Submit New Request</button>
 
@@ -21,54 +22,6 @@
 <br/>
 <br/>
 
-<div id="pending_requests" class="content_section" style="display: none;">
-  <table>
-    <tr>
-      <td>
-        From Date
-      </td>
-      <td>
-        To Date
-      </td>
-      <td>
-        Leave Type
-      </td>
-      <td>
-        Status
-      </td>
-      <td>
-        Actions
-      </td>
-    </tr>
-    <% current_user.attendances.each do |attendance| %>
-        <tr>
-          <td>
-            <%= date_format(attendance.start_date) %>
-          </td>
-          <td>
-            <%= date_format(attendance.end_date) %>
-          </td>
-          <td>
-            <%= attendance.is_leave_or_wfh ? "Leave" : "Work From Home" %>
-          </td>
-          <td>
-            <%= attendance_current_status(attendance) %>
-          </td>
-          <td>
-            <%= link_to("show", {:controller => 'attendances', :action => 'show', :id => attendance.id}, :class => "actions") %>
-            <% if (attendance_current_status(attendance).equal?(:pending)) %>
-                <%= link_to("edit", edit_attendance_path(attendance.id), :class => "actions") %>
-                <%= link_to("delete", {:controller => 'attendances', :action => 'destroy', :id => attendance.id}, :method => :delete, :class => "actions") %>
-            <% end %>
-            <% if (attendance_current_status(attendance).equal?(:rejected)) %>
-                <%= link_to("resubmit", new_attendance_path(old_id: attendance.id), :class => "actions") %>
-            <% end %>
-
-          </td>
-        </tr>
-    <% end %>
-  </table>
-</div>
 
 <div id="new_request" class="content_section" style="display: none;">
   <%= form_for(@attendance, :url => 'attendances') do |f| %>
@@ -106,11 +59,9 @@
   <span id="search_results_count" style="display: block;"></span>
 </div>
 
-<% if false %>
 <div class="content_section" id="member_info" style="display: none;">
 <%= render(:partial => 'team_member_info') %>
 </div>
-<% end %>
 
 <script>
     $(document).ready(function () {

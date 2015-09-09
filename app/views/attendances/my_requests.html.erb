@@ -1,0 +1,46 @@
+<table>
+  <tr>
+    <td>
+      From Date
+    </td>
+    <td>
+      To Date
+    </td>
+    <td>
+      Leave Type
+    </td>
+    <td>
+      Status
+    </td>
+    <td>
+      Actions
+    </td>
+  </tr>
+  <% current_user.attendances.each do |attendance| %>
+      <tr>
+        <td>
+          <%= date_format(attendance.start_date) %>
+        </td>
+        <td>
+          <%= date_format(attendance.end_date) %>
+        </td>
+        <td>
+          <%= attendance.is_leave_or_wfh ? "Leave" : "Work From Home" %>
+        </td>
+        <td>
+          <%= attendance_current_status(attendance) %>
+        </td>
+        <td>
+          <%= link_to("show", {:controller => 'attendances', :action => 'show', :id => attendance.id}, :class => "actions") %>
+          <% if (attendance_current_status(attendance).equal?(:pending)) %>
+              <%= link_to("edit", edit_attendance_path(attendance.id), :class => "actions") %>
+              <%= link_to("delete", {:controller => 'attendances', :action => 'destroy', :id => attendance.id}, :method => :delete, :class => "actions") %>
+          <% end %>
+          <% if (attendance_current_status(attendance).equal?(:rejected)) %>
+              <%= link_to("resubmit", new_attendance_path(old_id: attendance.id), :class => "actions") %>
+          <% end %>
+
+        </td>
+      </tr>
+  <% end %>
+</table>
