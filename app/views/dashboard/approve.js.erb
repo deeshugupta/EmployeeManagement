@@ -2,7 +2,11 @@
 $(document).ready(function() {
         $(".approval_comments").bind("ajax:success", function () {
             $(this).parent().parent().remove();
-           $('#see_requests').html("<%= escape_javascript(render(:partial => 'attendance_show', :locals => {:attendances => current_user.approvals.where(approval_status: nil)})) %>");
+           $('#see_requests')
+                   .html("<%= escape_javascript(render(:partial => 'attendance_show',
+                    :locals => {:attendances => current_user.approvals.where(approval_status: nil)})) %>");
+            $('#member_info')
+                    .html("<%= j(render(:partial => 'team_member_info' )) %>");
         });
 
 

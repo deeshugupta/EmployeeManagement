@@ -2,7 +2,8 @@
     | <%= link_to "Manage Roles", {:controller => 'roles'}, :class => 'navbar-link' %>
 <% end %>
 <br/><br/>
-<br/><button type="button" class="tab_button" name="pending_requests">View My Pending Requests</button>
+<br/>
+<button type="button" class="tab_button" name="pending_requests">View My Pending Requests</button>
 
 <button type="button" class="tab_button" name="new_request">Submit New Request</button>
 
@@ -15,7 +16,7 @@
     <%= link_to "Create new user", {action: 'new'}  %>
 <% end %>
 
-<%= image_tag "search_glass.png", :class => "tab_button", :name => "search_request"%>
+<%= image_tag "search_glass.png", :class => "tab_button", :name => "search_request" %>
 <br/>
 <br/>
 <br/>
@@ -39,7 +40,7 @@
         Actions
       </td>
     </tr>
-    <% current_user.attendances.each do |attendance|%>
+    <% current_user.attendances.each do |attendance| %>
         <tr>
           <td>
             <%= date_format(attendance.start_date) %>
@@ -54,12 +55,12 @@
             <%= attendance_current_status(attendance) %>
           </td>
           <td>
-            <%= link_to("show",{:controller => 'attendances', :action => 'show', :id => attendance.id},:class=>"actions")%>
-            <% if(attendance_current_status(attendance).equal?(:pending))%>
-            <%=link_to("edit", {:controller => 'attendances', :action => 'edit', :id => attendance.id},:class=>"actions") %>
-            <%=link_to("delete", {:controller => 'attendances', :action => 'destroy', :id => attendance.id},:method=> :delete,:class=>"actions") %>
-          <% end %>
-                </td>
+            <%= link_to("show", {:controller => 'attendances', :action => 'show', :id => attendance.id}, :class => "actions") %>
+            <% if (attendance_current_status(attendance).equal?(:pending)) %>
+                <%= link_to("edit", {:controller => 'attendances', :action => 'edit', :id => attendance.id}, :class => "actions") %>
+                <%= link_to("delete", {:controller => 'attendances', :action => 'destroy', :id => attendance.id}, :method => :delete, :class => "actions") %>
+            <% end %>
+          </td>
         </tr>
     <% end %>
   </table>
@@ -67,8 +68,9 @@
 
 <div id="new_request" class="content_section" style="display: none;">
   <%= form_for(@attendance, :url => 'attendances') do |f| %>
-      <%= render :partial => 'attendances/form', :locals =>  {:f =>f} %>
-  <%end%>
+      <%= render :partial => 'attendances/form', :locals => {:f => f} %>
+  <% end %>
+
 </div>
 
 <div id="see_requests" class="content_section" style="display: none;">
@@ -80,22 +82,22 @@
 
 <div class="content_section" id="search_request" style="display: none;">
   <div>
- <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
-  <%= form_tag("dashboard/search",:remote => true,:id=>"search_form") do %>
-      <%= label_tag "User: " %><%= text_field_tag :name  %><br>
-          <%= label_tag "Start Date: " %><%= date_select(:start,:start_date) %>
-          <%= label_tag "End Date: " %><%=date_select(:end,:end_date) %><br>
-          <%= label_tag "Status: " %><br/>
-          <%= check_box_tag :pending %><%= label_tag "pending " %>
-          <%= check_box_tag :approved %><%= label_tag "approved " %>
-          <%= check_box_tag :rejected %><%= label_tag "rejected " %><br/>
-          <%= label_tag "Leave Type: " %><br/>
-          <%= check_box_tag :leave %><%= label_tag "Leave " %>
-          <%= check_box_tag :wfh %><%= label_tag "Work From Home " %><br/>
-          <%= submit_tag("search")%>
+    <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
+        <%= form_tag("dashboard/search", :remote => true, :id => "search_form") do %>
+            <%= label_tag "User: " %><%= text_field_tag :name %><br>
+            <%= label_tag "Start Date: " %><%= date_select(:start, :start_date) %>
+            <%= label_tag "End Date: " %><%= date_select(:end, :end_date) %><br>
+            <%= label_tag "Status: " %><br/>
+            <%= check_box_tag :pending %><%= label_tag "pending " %>
+            <%= check_box_tag :approved %><%= label_tag "approved " %>
+            <%= check_box_tag :rejected %><%= label_tag "rejected " %><br/>
+            <%= label_tag "Leave Type: " %><br/>
+            <%= check_box_tag :leave %><%= label_tag "Leave " %>
+            <%= check_box_tag :wfh %><%= label_tag "Work From Home " %><br/>
+            <%= submit_tag("search") %>
 
-      <%end%>
-  <% end %>
+        <% end %>
+    <% end %>
   </div>
   <div id="search_results">
 
@@ -104,12 +106,14 @@
 </div>
 
 <div class="content_section" id="member_info" style="display: none;">
-    
+
+<%= render(:partial => 'team_member_info') %>
+
 </div>
 
 
 <script>
-  $(document).ready(function() {
-      attach_Click_event();
-  })
+    $(document).ready(function () {
+        attach_Click_event();
+    })
 </script>
