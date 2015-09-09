@@ -1,0 +1,14 @@
+<table>
+  <tr>
+    <th>Member Name</th><th>Leaves Taken</th><th>Work From Home Taken</th><th>Total Leaves</th><th>Leaves Remaining</th>
+  </tr>
+  <% current_user.team_members.each do |member| %>
+      <td><%=member.name%></td>
+      <% leaves = member.attendances.where(:is_leave_or_wfh => true).where(:approval_status => true).sum(:days) %>
+      <td><%= leaves %></td>
+      <td><%= member.attendances.where(:is_leave_or_wfh => false).where(Attendance.arel_table[:approval_status].not_eq(nil)).sum(:days) %></td>
+      <% leaves_applicable =  member.roles.first.leaves_applicable %>
+      <td><%= leaves_applicable %></td>
+      <td><%= leaves_applicable - leaves %></td>
+  <% end %>
+</table>
