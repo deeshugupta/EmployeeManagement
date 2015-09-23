@@ -1,67 +1,44 @@
+<style>
+    a.img_style:hover {
+        background: transparent;
+    }
+
+</style>
 <% if is_admin %>
     | <%= link_to "Manage Roles", {:controller => 'roles'}, :class => 'navbar-link' %>
+    <%= link_to "Show All Users", users_path %>
 <% end %>
 <br/><br/>
 <br/>
 
-<%= button_to "View My Leave Requests", my_requests_attendances_path%>
+<%= button_to "View Available Leaves", available_leaves_attendances_path %>
+<br/>
 
-<button type="button" class="tab_button" name="new_request">Submit New Request</button>
+<%= button_to "View My Leave Requests", my_requests_attendances_path %>
+<br/>
+<%= button_to "Submit New Request", apply_leave_attendances_path %>
 
 <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
-    <button type="button" class="tab_button" name="see_requests">Pending Approvals</button>
-    <button type="button" class="tab_button" name="member_info">View all Members</button>
+    <br/>
+    <%= button_to "Pending Approvals", pending_approvals_attendances_path %>
+    <br/>
+    <%= button_to "My Team Members", my_team_dashboard_index_path %>
 <% end %>
 
 <% if current_user.roles.include?(Role.find_by_name(:Admin)) %>
-    <%= link_to "Create new user", {action: 'new'}  %>
+    <br/>
+    <%= button_to "Create new user", {action: 'new'} %>
 <% end %>
-
-<%= image_tag "search_glass.png", :class => "tab_button", :name => "search_request" %>
-<br/>
-<br/>
 <br/>
 
+<%= button_to "Search Leave Requets", search_pending_approvals_attendances_path , :style => 'float:left' %>
 
-<div id="new_request" class="content_section" style="display: none;">
-  <%= form_for(@attendance, :url => 'attendances') do |f| %>
-      <%= render :partial => 'attendances/form', :locals => {:f => f} %>
-  <% end %>
-</div>
-
-<div id="see_requests" class="content_section" style="display: none;">
-  <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
-      <%= render(:partial => 'attendance_show', :locals => {:attendances => current_user.approvals.where(approval_status: nil)}) %>
-  <% end %>
-</div>
-
-<div class="content_section" id="search_request" style="display: none;">
-  <div>
-    <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
-        <%= form_tag("dashboard/search", :remote => true, :id => "search_form") do %>
-            <%= label_tag "User: " %><%= text_field_tag :name %><br>
-            <%= label_tag "Start Date: " %><%= date_select(:start, :start_date) %>
-            <%= label_tag "End Date: " %><%= date_select(:end, :end_date) %><br>
-            <%= label_tag "Status: " %><br/>
-            <%= check_box_tag :pending %><%= label_tag "pending " %>
-            <%= check_box_tag :approved %><%= label_tag "approved " %>
-            <%= check_box_tag :rejected %><%= label_tag "rejected " %><br/>
-            <%= label_tag "Leave Type: " %><br/>
-            <%= check_box_tag :leave %><%= label_tag "Leave " %>
-            <%= check_box_tag :wfh %><%= label_tag "Work From Home " %><br/>
-            <%= submit_tag("search") %>
-
-        <% end %>
-    <% end %>
-  </div>
-  <div id="search_results">
-  </div>
-  <span id="search_results_count" style="display: block;"></span>
-</div>
-
-<div class="content_section" id="member_info" style="display: none;">
-<%= render(:partial => 'team_member_info') %>
-</div>
+<a href="<%= search_pending_approvals_attendances_path %>" class="img_style" >
+  <%= image_tag "search_glass.png", :class => "img_style", :name => "search_request" %>
+</a>
+<div class="clear" style="clear:both"></div>
+<br/>
+<br/>
 
 <script>
     $(document).ready(function () {

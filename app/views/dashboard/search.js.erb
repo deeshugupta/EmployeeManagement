@@ -3,13 +3,11 @@
  */
 
 $(document).ready(function() {
-    <% if !@user_attendances.nil? & !@user_attendances.empty?%>
+    <% if !@user_attendances.blank? %>
     <% name = @user_attendances.first.user.name%>
-   $('#search_results').html("<%= escape_javascript(render(:partial => 'attendance_show', :locals=>{:attendances => @user_attendances})) %>");
-    $('#search_results_count').html("<b><%= @user_attendances.count%> results found</b>")
+   $('#search_results_count').html("<b><%= @user_attendances.count%> results found</b>")
+   $('#search_results').html("<%= escape_javascript(render(:partial => 'search_show', :locals=>{:attendances => @user_attendances, :wfh => @work_from_home, :leaves_total => @total_leaves})) %>");
     <%else%>
     $('#search_results').html("No Results Found.");
     <%end%>
-
-
 })

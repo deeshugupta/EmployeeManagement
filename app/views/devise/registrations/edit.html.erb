@@ -1,10 +1,11 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<%= link_to 'Home', root_path %>
+<h2>Edit Profile</h2>
 
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:method => :put}) do |f| %>
     <%= devise_error_messages! %>
 
     <div><%= f.label :email %><br/>
-      <%= f.email_field :email, :autofocus => true %></div>
+      <%= f.email_field :email, :autofocus => true, :disabled => true %></div>
 
     <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
         <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
@@ -20,19 +21,16 @@
       <%= f.password_field :current_password %></div>
 
     <div><%= f.label "Name" %><br/>
-      <%= f.text_field :name %></div>
+      <%= f.text_field :name, :disabled => true %></div>
 
     <div><%= f.label "Manager" %><br/>
-      <%= f.text_field :manager_id %></div>
+      <% if !resource.manager.blank? %>
+          <input type="text" disabled="disabled" value="<%= resource.manager.name %>">
+      <% end %>
+    </div>
 
     <div><%= f.label "Joining Date" %><br/>
-      <%= f.date_select :join_date %></div><br/>
+      <%= f.date_select :join_date, :disabled => true %></div><br/>
 
     <div><%= f.submit "Update" %></div>
 <% end %>
-
-<h3>Cancel my account</h3>
-
-<p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), :data => {:confirm => "Are you sure?"}, :method => :delete %></p>
-
-<%= link_to "Back", :back %>

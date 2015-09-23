@@ -2,8 +2,6 @@
  * Created by tt on 28/8/15.
  */
 
-
-
 function attach_Click_event() {
     $(".tab_button").click(function () {
         $(".content_section").hide();

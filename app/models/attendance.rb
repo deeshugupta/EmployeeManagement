@@ -4,6 +4,9 @@ class Attendance < ActiveRecord::Base
   belongs_to :user
   has_one :manager, :through => :user, :source => :manager
 
+  # t.date :start_date
+  validates_presence_of :days
+  # t.boolean :is_leave_or_wfh
 
   before_update do
   if self.changed?

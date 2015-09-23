@@ -1,16 +1,15 @@
 
-  <% if @attendance.errors.any? %>
+<% if @attendance.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@attendance.errors.count, "error") %> prohibited this attendance from being saved:</h2>
 
       <ul>
-      <% @attendance.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
+        <% @attendance.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+        <% end %>
       </ul>
     </div>
-  <% end %>
-
+<% end %>
 
   <div class="field">
     <%= f.label :start_date %><br />
@@ -18,7 +17,7 @@
   </div>
   <div class="field">
     <%= f.label :days %><br />
-    <%= f.number_field :days %>
+    <%= f.number_field :days, :class => 'text_field', :step => 'any', required: true %>
   </div>
   <div class="field">
     <%= f.label "Leave or work from home?" %><br />
@@ -29,10 +28,10 @@
   </div>
   <div class="field">
     <%= f.label :reason %><br />
-    <%= f.text_area :reason, :cols => 20, :rows=>5 %>
+    <%= f.text_area :reason, :cols => 20, :rows=>5 , required: true%>
   </div>
 
   <div>
-    <%= f.submit 'asd' %>
+    <%= f.submit 'Submit Request'%>
   </div>
 

@@ -1,0 +1,22 @@
+<%= link_to 'Back', :controller => :dashboard, :action => 'index' %>
+
+<h1>My Available Leaves</h1>
+<table>
+  <tr>
+    <th>Member Name</th>
+    <th>Leaves Taken</th>
+    <th>Work From Home Taken</th>
+    <th>Total Leaves</th>
+    <th>Leaves Remaining</th>
+  </tr>
+
+  <tr>
+    <td><%= current_user.name %></td>
+    <% leaves = current_user.attendances.where(:is_leave_or_wfh => true).where(:approval_status => true).sum(:days) %>
+    <td><%= leaves %></td>
+    <td><%= current_user.attendances.where(:is_leave_or_wfh => false).where(Attendance.arel_table[:approval_status].not_eq(nil)).sum(:days) %></td>
+    <% leaves_applicable = current_user.roles.first.leaves_applicable %>
+    <td><%= leaves_applicable %></td>
+    <td><%= leaves_applicable - leaves %></td>
+  </tr>
+</table>

@@ -1,46 +1,87 @@
-<table>
-  <tr>
-    <td>
-      From Date
-    </td>
-    <td>
-      To Date
-    </td>
-    <td>
-      Leave Type
-    </td>
-    <td>
-      Status
-    </td>
-    <td>
-      Actions
-    </td>
-  </tr>
-  <% current_user.attendances.each do |attendance| %>
+<%= link_to 'Back', root_path %>
+
+<% if current_user.attendances.count>0 %>
+    <table>
       <tr>
         <td>
-          <%= date_format(attendance.start_date) %>
+          From Date
         </td>
         <td>
-          <%= date_format(attendance.end_date) %>
+          To Date
         </td>
         <td>
-          <%= attendance.is_leave_or_wfh ? "Leave" : "Work From Home" %>
+          Leave Type
         </td>
         <td>
-          <%= attendance_current_status(attendance) %>
+          Status
         </td>
         <td>
-          <%= link_to("show", {:controller => 'attendances', :action => 'show', :id => attendance.id}, :class => "actions") %>
-          <% if (attendance_current_status(attendance).equal?(:pending)) %>
-              <%= link_to("edit", edit_attendance_path(attendance.id), :class => "actions") %>
-              <%= link_to("delete", {:controller => 'attendances', :action => 'destroy', :id => attendance.id}, :method => :delete, :class => "actions") %>
-          <% end %>
-          <% if (attendance_current_status(attendance).equal?(:rejected)) %>
-              <%= link_to("resubmit", new_attendance_path(old_id: attendance.id), :class => "actions") %>
-          <% end %>
-
+          Actions
         </td>
       </tr>
-  <% end %>
-</table>
+      <% current_user.attendances.each do |attendance| %>
+          <tr>
+            <td>
+              <%= date_format(attendance.start_date) %>
+            </td>
+            <td>
+              <%= date_format(attendance.end_date) %>
+            </td>
+            <td>
+              <%= attendance.is_leave_or_wfh ? "Leave" : "Work From Home" %>
+            </td>
+            <td>
+              <%= attendance_current_status(attendance) %>
+            </td>
+            <td>
+              <%= link_to("show", {:controller => 'attendances', :action => 'show', :id => attendance.id}, :class => "actions") %>
+              <% if (attendance_current_status(attendance).equal?(:pending)) %>
+                  <%= link_to("edit", edit_attendance_path(attendance.id), :class => "actions") %>
+                  <%= link_to("delete", {:controller => 'attendances', :action => 'destroy', :id => attendance.id}, :method => :delete, :class => "actions") %>
+              <% end %>
+              <% if (attendance_current_status(attendance).equal?(:rejected)) %>
+                  <%= link_to("resubmit", new_attendance_path(old_id: attendance.id), :class => "actions") %>
+              <% end %>
+
+            </td>
+          </tr>
+      <% end %>
+    </table>
+
+    <p>
+      <b>Search My Leave Requests</b>
+      <%= image_tag "search_glass.png", :class => "tab_button", :name => "search_my_request" %>
+    </p>
+<% else %>
+
+    <p>
+      <b>You don't have any Leave Requests</b>
+    </p>
+<% end %>
+
+<div class="content_section" id="search_my_request" style="display: none;">
+  <div>
+    <%= form_tag("../dashboard/search_my_requests", :remote => true, :id => "search_form") do %>
+
+        <%= label_tag "Start Date: " %><%= date_select(:start, :start_date) %>
+        <%= label_tag "End Date: " %><%= date_select(:end, :end_date) %><br>
+        <%= label_tag "Status: " %><br/>
+        <%= check_box_tag :pending %><%= label_tag "pending " %>
+        <%= check_box_tag :approved %><%= label_tag "approved " %>
+        <%= check_box_tag :rejected %><%= label_tag "rejected " %><br/>
+        <%= label_tag "Leave Type: " %><br/>
+        <%= check_box_tag :leave %><%= label_tag "Leave " %>
+        <%= check_box_tag :wfh %><%= label_tag "Work From Home " %><br/>
+        <%= submit_tag("search") %>
+
+    <% end %>
+  </div>
+  <div id="search_results">
+  </div>
+  <span id="search_results_count" style="display: block;"></span>
+</div>
+<script>
+    $(document).ready(function () {
+        attach_Click_event();
+    })
+</script>

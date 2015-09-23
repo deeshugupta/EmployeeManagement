@@ -6,8 +6,21 @@ EmployeeManagement::Application.routes.draw do
   resources :attendances do
     collection do
       get :my_requests
+      get :apply_leave
+      get :pending_approvals
+      get :search_pending_approvals
+      get :available_leaves
     end
   end
+  post "dashboard/search" => "dashboard#search", :as => :dashboard_search
+  resources :dashboard do
+    collection do
+      get :my_team
+      get :approve
+    end
+  end
+
+  resources :users
 
   match ':controller(/:action(:/id))'
 

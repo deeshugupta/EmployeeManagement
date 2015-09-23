@@ -1,9 +1,6 @@
 <table>
   <tr>
     <th>
-      Name
-    </th>
-    <th>
       From Date
     </th>
     <th>
@@ -28,9 +25,6 @@
   <% attendances.each do |approval|%>
       <tr>
         <td>
-          <%= approval.user.name %>
-        </td>
-        <td>
           <%= date_format(approval.start_date) %>
         </td>
         <td>
@@ -48,22 +42,21 @@
         <td>
           <%= attendance_current_status(approval) %>
         </td>
-        <td id="approval<%= approval.id%>">
-          <%= link_to("show",{:controller => 'attendances', :action => 'show', :id => approval.id},:class=>"actions")%>
 
-          <%= form_tag approve_dashboard_index_path , :html=>{:class => "approval_comments"} do %>
-              <div class="field">
-                <%= label_tag :comments %><br />
-                <%= text_area_tag :comments, "", :cols=>10, :rows=>5 %>
-              </div>
-              <%= hidden_field_tag("approval_id",approval.id) %>
+        <td>
 
-              <%= submit_tag "Approve" %>
-              <%= submit_tag "Reject" %>
-              <%= submit_tag "Comment" %>
+          <%= link_to("show", {:controller => 'attendances', :action => 'show', :id => approval.id}, :class => "actions") %>
+          <% if (attendance_current_status(approval).equal?(:pending)) %>
+              <%= link_to("edit", edit_attendance_path(approval.id), :class => "actions") %>
+              <%= link_to("delete", {:controller => 'attendances', :action => 'destroy', :id => approval.id}, :method => :delete, :class => "actions") %>
+          <% end %>
+          <% if (attendance_current_status(approval).equal?(:rejected)) %>
+              <%= link_to("resubmit", new_attendance_path(old_id: approval.id), :class => "actions") %>
           <% end %>
 
         </td>
+
+
       </tr>
   <% end %>
 

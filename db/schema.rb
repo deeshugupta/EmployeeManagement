@@ -11,12 +11,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150902074258) do
+ActiveRecord::Schema.define(:version => 20150914070628) do
 
   create_table "attendances", :force => true do |t|
     t.integer  "user_id"
     t.date     "start_date"
-    t.integer  "days"
+    t.float    "days"
     t.boolean  "is_leave_or_wfh"
     t.text     "reason"
     t.boolean  "approval_status"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(:version => 20150902074258) do
   create_table "roles", :force => true do |t|
     t.integer  "working_days"
     t.string   "name"
-    t.integer  "leaves_applicable"
+    t.float    "leaves_applicable"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
