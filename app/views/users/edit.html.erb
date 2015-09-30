@@ -26,7 +26,7 @@
             <div><%= f.label :manager %><br/>
 
               <%= f.select :manager_id,
-                           options_for_select(@managers.map { |v| [v.name, v.id] }) %>
+                           options_for_select(@managers.map { |v| [v.name, v.id] }, :prompt => @user.manager.name) %>
             </div>
         <% end %>
       </div>
