@@ -34,9 +34,9 @@ test:
 production:
   adapter: mysql2
   encoding: utf8
-  reconnect: false
+  reconnect: true
   database: EmployeeManagement_production
   pool: 5
   username: root
-  password:
-  socket: /var/run/mysqld/mysqld.sock
+  password: website85
+  host: trips3m-stage.c6pbqb8suf6k.us-east-1.rds.amazonaws.com
