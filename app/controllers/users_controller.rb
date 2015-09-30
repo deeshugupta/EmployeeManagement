@@ -8,6 +8,7 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id])
     @managers = User.all(:include => :roles, :conditions => ["roles.name = ?", "Manager"])
+    @manager_name = @user.manager.try(:name).to_s
     @roles_available = Role.all
   end
   def update
