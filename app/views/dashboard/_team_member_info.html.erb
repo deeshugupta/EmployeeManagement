@@ -9,9 +9,9 @@
         <% leaves = member.attendances.where(:is_leave_or_wfh => true).where(:approval_status => true).sum(:days) %>
         <td><%= leaves %></td>
         <td><%= member.attendances.where(:is_leave_or_wfh => false).where(Attendance.arel_table[:approval_status].not_eq(nil)).sum(:days) %></td>
-        <% leaves_applicable =  member.roles.first.leaves_applicable %>
+        <% leaves_applicable =  member.leaves_applicable %>
         <td><%= leaves_applicable %></td>
-        <td><%= leaves_applicable - leaves %></td>
+        <td><%= leaves_applicable.to_i - leaves.to_i %></td>
       </tr>
   <% end %>
 </table>

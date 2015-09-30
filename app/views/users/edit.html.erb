@@ -2,18 +2,25 @@
 <h2>Edit <%= @user.name %></h2>
 
 
-<%= form_for(@user)	 do |f| %>
+<%= form_for(@user) do |f| %>
 
     <div>
+
       <div><%= f.label :email %><br/>
         <%= f.email_field :email, :autofocus => true %></div>
       <div>
+        <div><%= f.label :name %><br/>
+          <%= f.text_field :name %></div>
+        <div>Employee Code<br/>
+          <%= f.number_field(:employee_code) %></div>
+        <div>Leaves Applicable<br/>
+          <%= f.number_field(:leaves_applicable) %></div>
         <%= f.label :Role %><br/>
         <% if @roles_available %>
             <ul>
               <% @roles_available.each do |role| %>
-                  <%if @user.roles.include?(role)%>
-                      <li><%= check_box_tag 'role[]', role.id,:checked => true %><%= role.name %>
+                  <% if @user.roles.include?(role) %>
+                      <li><%= check_box_tag 'role[]', role.id, :checked => true %><%= role.name %>
                   <% else %>
                       <li><%= check_box_tag 'role[]', role.id %><%= role.name %>
                   <% end %>

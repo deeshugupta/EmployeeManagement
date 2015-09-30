@@ -15,8 +15,8 @@
     <% leaves = current_user.attendances.where(:is_leave_or_wfh => true).where(:approval_status => true).sum(:days) %>
     <td><%= leaves %></td>
     <td><%= current_user.attendances.where(:is_leave_or_wfh => false).where(Attendance.arel_table[:approval_status].not_eq(nil)).sum(:days) %></td>
-    <% leaves_applicable = current_user.roles.first.leaves_applicable %>
+    <% leaves_applicable = current_user.leaves_applicable %>
     <td><%= leaves_applicable %></td>
-    <td><%= leaves_applicable - leaves %></td>
+    <td><%= leaves_applicable.to_i - leaves.to_i %></td>
   </tr>
 </table>
