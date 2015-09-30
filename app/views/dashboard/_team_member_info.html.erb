@@ -11,7 +11,7 @@
         <td><%= member.attendances.where(:is_leave_or_wfh => false).where(Attendance.arel_table[:approval_status].not_eq(nil)).sum(:days) %></td>
         <% leaves_applicable =  member.leaves_applicable %>
         <td><%= leaves_applicable %></td>
-        <td><%= leaves_applicable.to_i - leaves.to_i %></td>
+        <td><%= leaves_applicable.to_f - leaves.to_f %></td>
       </tr>
   <% end %>
 </table>
