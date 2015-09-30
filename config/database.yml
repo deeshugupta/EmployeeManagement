@@ -14,8 +14,8 @@ development:
   reconnect: false
   database: EmployeeManagement_development
   pool: 5
-  username: tt
-  password: P@55w0rd
+  username: root
+  password: root
   socket: /var/run/mysqld/mysqld.sock
 
 # Warning: The database defined as "test" will be erased and

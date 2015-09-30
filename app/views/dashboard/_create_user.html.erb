@@ -1,5 +1,8 @@
 <div><%= f.label :name %><br/>
   <%= f.text_field :name, autofocus: true, required: true %></div>
+<div>Employee Code<br/>
+  <%= f.number_field(:employee_code) %></div>
+
 
 <div class="field">
   <%= f.label :email %><br/>
@@ -22,22 +25,23 @@
 <div><%= f.label :manager %><br/>
 
   <%= f.select :manager_id,
-               options_for_select(@managers.map { |v| [v.name, v.id] }) %>
+               options_for_select(@managers.map { |v| [v.name, v.id] }, :prompt => "") %>
 </div>
 
+<div>Leaves Applicable<br/>
+<%= f.number_field(:leaves_applicable) %></div>
 
-<div>
-  <%= f.label :Role %><br/>
-  <% if @roles_available %>
-      <ul>
-        <% @roles_available.each do |role| %>
-            <li><%= check_box_tag 'role[]', role.id %><%= role.name %>
-            </li>
-        <% end %>
-      </ul>
-  <% end %>
 
-</div>
+<%= f.label :Role %><br/>
+<% if @roles_available %>
+    <ul>
+      <% @roles_available.each do |role| %>
+
+              <li><%= check_box_tag 'role[]', role.id %><%= role.name %>
+          </li>
+      <% end %>
+    </ul>
+<% end %>
 
 <div>
   <%= f.label "Joining Date" %><br/>
