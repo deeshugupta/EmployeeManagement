@@ -62,6 +62,7 @@ GEM
     mime-types (1.25.1)
     multi_json (1.11.2)
     mysql2 (0.3.20)
+    nprogress-rails (0.1.6.7)
     orm_adapter (0.5.0)
     polyglot (0.3.5)
     rack (1.4.7)
@@ -119,6 +120,7 @@ DEPENDENCIES
   devise
   jquery-rails
   mysql2
+  nprogress-rails
   rails (= 3.2.0)
   sass-rails (~> 3.2.3)
   uglifier (>= 1.0.3)

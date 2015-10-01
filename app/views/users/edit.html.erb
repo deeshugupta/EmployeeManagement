@@ -33,7 +33,7 @@
             <div><%= f.label :manager %><br/>
 
               <%= f.select :manager_id,
-                           options_for_select(@managers.map { |v| [v.name, v.id] }), :prompt => @manager_name %>
+                           options_for_select(@managers.map { |v| [v.name, v.id] }, [@user.manager.name, @user.manager.id]) %>
             </div>
         <% end %>
       </div>
