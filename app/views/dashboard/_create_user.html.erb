@@ -28,9 +28,13 @@
                options_for_select(@managers.map { |v| [v.name, v.id] }), :prompt => "" %>
 </div>
 
-<div>Leaves Applicable<br/>
-<%= f.number_field(:leaves_applicable, :step => 0.5) %></div>
+<div>Casual Leaves Applicable<br/>
+<%= f.number_field(:casual, :step => 0.5) %></div>
 
+<div>Sick Leaves Applicable<br/>
+  <%= f.number_field(:sick, :step => 0.5) %></div>
+<div>Privilege Leaves Applicable<br/>
+  <%= f.number_field(:privilege, :step => 0.5) %></div>
 
 <%= f.label :Role %><br/>
 <% if @roles_available %>

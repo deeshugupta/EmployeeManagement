@@ -10,6 +10,9 @@
           To Date
         </td>
         <td>
+          Category
+        </td>
+        <td>
           Leave Type
         </td>
         <td>
@@ -29,6 +32,9 @@
             </td>
             <td>
               <%= attendance.is_leave_or_wfh ? "Leave" : "Work From Home" %>
+            </td>
+            <td>
+              <%= attendance.leave_type.name %>
             </td>
             <td>
               <%= attendance_current_status(attendance) %>

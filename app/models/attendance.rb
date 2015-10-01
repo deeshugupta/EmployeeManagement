@@ -3,6 +3,9 @@ class Attendance < ActiveRecord::Base
   #Associations
   belongs_to :user
   has_one :manager, :through => :user, :source => :manager
+  belongs_to :leave_type
+
+  accepts_nested_attributes_for :leave_type
 
   # t.date :start_date
   validates_presence_of :days

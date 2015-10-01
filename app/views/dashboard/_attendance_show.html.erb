@@ -10,6 +10,9 @@
       To Date
     </th>
     <th>
+      Category
+    </th>
+    <th>
       Leave Type
     </th>
     <th>
@@ -38,6 +41,9 @@
         </td>
         <td>
           <%= approval.is_leave_or_wfh ? 'Leave' : 'Work From Home' %>
+        </td>
+        <td>
+          <%= approval.leave_type.name %>
         </td>
         <td>
           <%= approval.days %>

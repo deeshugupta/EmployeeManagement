@@ -19,6 +19,10 @@
     <%= f.label :days %><br />
     <%= f.number_field :days, :class => 'text_field', :step => 0.5, required: true %>
   </div>
+  <div>
+    Leave Type <br/>
+    <%= f.select :leave_type_id, options_for_select(LeaveType.all.map {|v| [v.name, v.id]}) %>
+  </div>
   <div class="field">
     <%= f.label "Leave or work from home?" %><br />
     <%= f.radio_button :is_leave_or_wfh, true  %>

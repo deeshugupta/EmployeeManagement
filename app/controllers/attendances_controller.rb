@@ -33,6 +33,7 @@ class AttendancesController < ApplicationController
   # GET /attendances/1/edit
   def edit
     @attendance = Attendance.find(params[:id])
+    @leave_type = @attendance.leave_type
     if(@attendance.approval_status)
       redirect_to "/faultyaccess.html"
     end
