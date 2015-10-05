@@ -7,6 +7,11 @@ class UsersController < ApplicationController
   end
   def edit
     @user = User.find(params[:id])
+    if @user.manager_id != current_user.id
+      if !current_user.roles.include?Role.find_by_name(:admin)
+        redirect_to "/404.html"
+      end
+    end
     @managers = User.all(:include => :roles, :conditions => ["roles.name = ?", "Manager"])
     @manager_name = @user.manager.try(:name).to_s
     @roles_available = Role.all

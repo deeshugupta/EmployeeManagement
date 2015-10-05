@@ -3,7 +3,7 @@
 <h1>Search Leave Requests</h1>
 
 <div>
-  <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
+  <% if current_user.roles.include?(Role.find_by_name(:manager)) || current_user.roles.include?(Role.find_by_name(:admin)) %>
       <%= form_tag(dashboard_search_path , :remote => true, :id => "search_form") do %>
           <%= label_tag "User: " %>
           <% my_team = current_user.team_members.map(&:name) %>

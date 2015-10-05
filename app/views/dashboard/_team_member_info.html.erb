@@ -8,8 +8,8 @@
         <td><%=member.name%></td>
         <% leaves = member.attendances.where(:is_leave_or_wfh => true).where(:approval_status => true).sum(:days) %>
         <td><%= leaves %></td>
-        <td><%= member.attendances.where(:is_leave_or_wfh => false).where(Attendance.arel_table[:approval_status].not_eq(nil)).sum(:days) %></td>
-        <% leaves_applicable =  member.leaves_applicable %>
+        <td><%= member.attendances.where(:is_leave_or_wfh => false).where(:approval_status => true).sum(:days) %></td>
+        <% leaves_applicable =  member.sick.to_f + member.casual.to_f + member.privilege.to_f %>
         <td><%= leaves_applicable %></td>
         <td><%= leaves_applicable.to_f - leaves.to_f %></td>
       </tr>

@@ -6,36 +6,36 @@
 </style>
 <% if is_admin %>
     | <%= link_to "Manage Roles", {:controller => 'roles'}, :class => 'navbar-link' %>
-    |<%= link_to "Show All Users", users_path %>
+    | <%= link_to "Show All Users", users_path %>
 <% end %>
 <br/><br/>
 <br/>
 
-<%= button_to "View Available Leaves", available_leaves_attendances_path %>
+<%= button_to "View Available Leaves", available_leaves_attendances_path, :class => "dashboard_buttons" %>
 <br/>
 
-<%= button_to "View My Leave Requests", my_requests_attendances_path %>
+<%= button_to "View My Leave Requests", my_requests_attendances_path, :class => "dashboard_buttons" %>
 <br/>
-<%= button_to "Submit New Request", apply_leave_attendances_path %>
+<%= button_to "Submit New Request", apply_leave_attendances_path, :class => "dashboard_buttons" %>
 
 <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
     <br/>
-    <%= button_to "Pending Approvals", pending_approvals_attendances_path %>
+    <%= button_to "Pending Approvals", pending_approvals_attendances_path, :class => "dashboard_buttons" %>
     <br/>
-    <%= button_to "My Team Members", my_team_dashboard_index_path %>
+    <%= button_to "My Team Members", my_team_dashboard_index_path, :class => "dashboard_buttons" %>
 <% end %>
 
 <% if current_user.roles.include?(Role.find_by_name(:Admin)) %>
     <br/>
-    <%= button_to "Create new user", {action: 'new'} %>
+    <%= button_to "Create new user", {action: 'new'}, :class => "dashboard_buttons" %>
 <% end %>
 <br/>
 
-<%= button_to "Search Leave Requets", search_pending_approvals_attendances_path , :style => 'float:left' %>
+<% if current_user.roles.include?(Role.find_by_name(:Admin)) ||  current_user.roles.include?(Role.find_by_name(:manager)) %>
+    <%= button_to "Search Leave Request", search_pending_approvals_attendances_path, :class => "dashboard_buttons" %>
+<%end%>
 
-<a href="<%= search_pending_approvals_attendances_path %>" class="img_style" >
-  <%= image_tag "search_glass.png", :class => "img_style", :name => "search_request" %>
-</a>
+
 <div class="clear" style="clear:both"></div>
 <br/>
 <br/>

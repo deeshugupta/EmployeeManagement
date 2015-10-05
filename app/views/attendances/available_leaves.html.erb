@@ -8,10 +8,9 @@
     <th>Sick Leaves</th>
     <th>Privilege Leaves</th>
     <th>Work From Home Taken</th>
-    <th>Total Casual Leaves</th>
-    <th>Total Sick Leaves</th>
-    <th>Total Privilege Leaves</th>
-    <th>Leaves Remaining</th>
+    <th>Casual Leaves Remaining</th>
+    <th>Sick Leaves Remaining</th>
+    <th>Privilege Leaves Remaining</th>
   </tr>
 
   <tr>
@@ -24,9 +23,8 @@
     <td><%= pleaves %></td>
     <td><%= current_user.attendances.where(:is_leave_or_wfh => false).where(:approval_status => true).sum(:days) %></td>
     <% leaves_applicable = current_user.casual.to_f+current_user.sick.to_f+current_user.privilege.to_f %>
-    <td><%= current_user.casual.to_f %></td>
-    <td><%= current_user.sick.to_f %></td>
-    <td><%= current_user.privilege.to_f %></td>
-    <td><%= leaves_applicable - (cleaves.to_f+ sleaves.to_f+ pleaves.to_f) %></td>
+    <td><%= current_user.casual.to_f - cleaves.to_f%></td>
+    <td><%= current_user.sick.to_f - sleaves.to_f %></td>
+    <td><%= current_user.privilege.to_f - pleaves.to_f %></td>
   </tr>
 </table>

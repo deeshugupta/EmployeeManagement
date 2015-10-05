@@ -55,12 +55,13 @@
           <%= attendance_current_status(approval) %>
         </td>
         <td id="approval<%= approval.id%>">
-          <%= link_to("show",{:controller => 'attendances', :action => 'show', :id => approval.id},:class=>"actions")%>
+          <%= link_to("show",{:controller => 'attendances', :action => 'show', :id => approval.id},:class=>"actions")%><br/><br/>
+
 
           <%= form_tag approve_dashboard_index_path , :html=>{:class => "approval_comments"} do %>
               <div class="field">
-                <%= label_tag :comments %><br />
-                <%= text_area_tag :comments, "", :cols=>10, :rows=>5 %>
+
+                <%= text_area_tag :comments, "", :placeholder => "Comments",:cols=>25, :rows=>5, :style => "resize: none;" %>
               </div>
               <%= hidden_field_tag("approval_id",approval.id) %>
 
