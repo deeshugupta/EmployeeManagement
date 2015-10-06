@@ -65,6 +65,7 @@ class AttendancesController < ApplicationController
   def update
     @attendance = Attendance.find(params[:id])
     @attendance.end_date= @attendance.start_date + @attendance.days.days
+    @attendance.approval_status =nil
     if(@attendance.approval_status)
       redirect_to "/faultyaccess.html"
     end

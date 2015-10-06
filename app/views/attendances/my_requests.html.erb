@@ -46,7 +46,7 @@
                   <%= link_to("delete", {:controller => 'attendances', :action => 'destroy', :id => attendance.id}, :method => :delete, :class => "actions") %>
               <% end %>
               <% if (attendance_current_status(attendance).equal?(:rejected)) %>
-                  <%= link_to("resubmit", new_attendance_path(old_id: attendance.id), :class => "actions") %>
+                  <%= link_to("resubmit", edit_attendance_path(id: attendance.id), :class => "actions") %>
               <% end %>
 
             </td>

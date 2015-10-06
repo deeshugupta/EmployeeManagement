@@ -29,8 +29,7 @@ class DashboardController < ApplicationController
   end
 
   def approve
-    puts "params ******************"
-    puts params
+
     @attendance = Attendance.find(params[:approval_id])
     approval_type = params[:commit]
     type = nil
@@ -41,7 +40,7 @@ class DashboardController < ApplicationController
     else
       type = false
     end
-    @attendance.update_attributes(:comments => params[:comments], :approval_status => type)
+    @attendance.update_attributes(:comments => @attendance.comments.to_s+":##:"+params[:comments].to_s, :approval_status => type)
     redirect_to pending_approvals_attendances_url
   end
 
@@ -60,12 +59,15 @@ class DashboardController < ApplicationController
     approval_status_where = ''
     leave = params[:leave]
     wfh = params[:wfh]
+    casual = params[:casual]
+    sick = params[:sick]
+    privilege = params[:privilege]
 
     if !name.blank?
-      @user_attendances = Attendance.joins(:user).
+      @user_attendances = Attendance.joins(:user, :leave_type).
           where('users.name in (?) and users.manager_id = ?', name, current_user.id)
     else
-      @user_attendances = Attendance.joins(:user).
+      @user_attendances = Attendance.joins(:user, :leave_type).
           where('users.manager_id = ?', current_user.id)
     end
     if !start_date.nil?
@@ -97,15 +99,43 @@ class DashboardController < ApplicationController
       @user_attendances = @user_attendances.where(approval_status_where)
     end
 
-    leave_type_where =''
+    leave_category_where =''
     if (!leave.nil?)
-      leave_type_where = leave_type_where+'is_leave_or_wfh = true'
+      leave_category_where = leave_category_where+'is_leave_or_wfh = true'
     end
     if (!wfh.nil?)
-      if (!leave_type_where.empty?)
-        leave_type_where = leave_type_where+' OR is_leave_or_wfh = false'
+      if (!leave_category_where.empty?)
+        leave_category_where = leave_category_where+' OR is_leave_or_wfh = false'
       else
-        leave_type_where = leave_type_where+'is_leave_or_wfh = false'
+        leave_category_where = leave_category_where+'is_leave_or_wfh = false'
+      end
+    end
+
+
+
+
+    if (!leave_category_where.empty?)
+      @user_attendances = @user_attendances.where(leave_category_where)
+    end
+
+    leave_type_where=""
+    if(!casual.nil?)
+      leave_type_where = leave_type_where + " leave_types.name like 'casual' "
+    end
+
+    if !sick.nil?
+      if !leave_type_where.empty?
+        leave_type_where = leave_type_where + " OR leave_types.name like 'sick' "
+      else
+        leave_type_where = leave_type_where + " leave_types.name like 'sick' "
+      end
+    end
+
+    if !privilege.nil?
+      if !leave_type_where.empty?
+        leave_type_where = leave_type_where + " OR leave_types.name like 'privilege' "
+      else
+        leave_type_where = leave_type_where + " leave_types.name like 'privilege' "
       end
     end
 
