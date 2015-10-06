@@ -13,7 +13,9 @@ class UsersController < ApplicationController
       end
     end
     @managers = User.all(:include => :roles, :conditions => ["roles.name = ?", "Manager"])
-    @manager_name = @user.manager.try(:name).to_s
+    @default_manager_name = @managers.first.name
+    @default_manager_id = @managers.first.id
+
     @roles_available = Role.all
   end
   def update
