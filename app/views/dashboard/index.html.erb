@@ -5,8 +5,8 @@
 
 </style>
 <% if is_admin %>
-    | <%= link_to "Manage Roles", {:controller => 'roles'}, :class => 'navbar-link' %>
-    | <%= link_to "Show All Users", users_path %>
+     | <%= link_to "Manage Roles", {:controller => 'roles'}, :class => ' top_links' %>
+     | <%= link_to "Show All Users", users_path, :class => 'top_links' %>
 <% end %>
 <br/><br/>
 <br/>

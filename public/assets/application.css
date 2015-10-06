@@ -284,6 +284,30 @@ table, th, td {
 .approval_comments {
   display: none;
 }
+
+/* line 58, ../../app/assets/stylesheets/application.css.scss */
+.top_links {
+  text-align: center;
+  color: #000000;
+}
+
+/* line 62, ../../app/assets/stylesheets/application.css.scss */
+.top_links:hover {
+  background-color: #cccccc;
+}
+/* line 4, ../../app/assets/stylesheets/dashboard.css.scss */
+.dashboard_buttons {
+  text-align: center;
+  border: 1px solid #666666;
+  width: 200px;
+  color: #333333;
+  background: none;
+}
+
+/* line 12, ../../app/assets/stylesheets/dashboard.css.scss */
+.dashboard_buttons:hover {
+  background-color: #cccccc;
+}
 /* line 1, ../../app/assets/stylesheets/scaffolds.css.scss */
 body {
   background-color: #fff;

@@ -1,3 +1,11 @@
+<b>Approved Leaves</b> :
+<b><%=@name%></b> has taken
+<b><%= @sick %> sick</b> leaves,
+<b><%= @casual %> casual</b> leaves and
+<b><%= @privilege %> privilege</b> leaves
+
+
+
 <table>
   <tr>
     <th>
@@ -55,9 +63,6 @@
   <% end %>
 
 </table>
-
-<%= leaves_total.to_s %><br>
-<%= wfh.to_s %>
 
 
 <% if false %>

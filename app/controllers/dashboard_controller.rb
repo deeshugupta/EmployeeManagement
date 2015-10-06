@@ -143,6 +143,31 @@ class DashboardController < ApplicationController
       @user_attendances = @user_attendances.where(leave_type_where)
     end
 
+    @sick = Attendance.joins(:user,:leave_type)
+                      .where("users.name like ?
+                              and leave_types.name like ?
+                              and start_date >= ?
+                              and end_date <= ?
+                              and approval_status = true",
+                              name,'sick',start_date, end_date).sum('attendances.days')
+
+    @casual = Attendance.joins(:user,:leave_type)
+                .where("users.name like ?
+                              and leave_types.name like ?
+                              and start_date >= ?
+                              and end_date <= ?
+                              and approval_status = true",
+                       name,'casual',start_date, end_date).sum('attendances.days')
+
+    @privilege = Attendance.joins(:user,:leave_type)
+                .where("users.name like ?
+                              and leave_types.name like ?
+                              and start_date >= ?
+                              and end_date <= ?
+                              and approval_status = true",
+                       name,'privilege',start_date, end_date).sum('attendances.days')
+    @name = name
+
     att_wfh = Attendance.where('is_leave_or_wfh = ?', false).group('user_id')
     att_leaves = Attendance.where('is_leave_or_wfh = ?', true).group('user_id')
 

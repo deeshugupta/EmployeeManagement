@@ -44,6 +44,7 @@ class AttendancesController < ApplicationController
   def create
     @attendance = Attendance.new(params[:attendance])
     @attendance.user = current_user
+    @attendance.days = @attendance.days.abs
     @attendance.end_date= @attendance.start_date + @attendance.days.days
     if(@attendance.approval_status)
       redirect_to "/faultyaccess.html"
@@ -66,7 +67,7 @@ class AttendancesController < ApplicationController
     @attendance = Attendance.find(params[:id])
     start_date = Date.new(params[:attendance]["start_date(1i)"].to_i, params[:attendance]["start_date(2i)"].to_i, params[:attendance]["start_date(3i)"].to_i)
     @attendance.start_date = start_date
-    @attendance.end_date= start_date + params[:attendance][:days].to_i.days
+    @attendance.end_date= start_date + params[:attendance][:days].to_i.abs.days
     @attendance.approval_status =nil
     if(@attendance.approval_status)
       redirect_to "/faultyaccess.html"

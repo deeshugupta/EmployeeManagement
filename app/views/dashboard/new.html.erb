@@ -1,4 +1,4 @@
-<%= link_to 'Back', :controller => :dashboard, :action => 'index' %>
+| <%= link_to 'Back',{:controller => :dashboard, :action => 'index'},:class => "top_links" %>
 <h2>Create New User</h2>
 
 <%= form_for(@user, url: 'create')	 do |f| %>

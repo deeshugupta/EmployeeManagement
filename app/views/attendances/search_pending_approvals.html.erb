@@ -1,4 +1,4 @@
-<%= link_to 'Back', :controller => :dashboard, :action => 'index' %>
+ | <%= link_to 'Back', {:controller => :dashboard, :action => 'index'},:class => "top_links" %>
 
 <h1>Search Leave Requests</h1>
 
@@ -7,7 +7,7 @@
       <%= form_tag(dashboard_search_path , :remote => true, :id => "search_form") do %>
           <%= label_tag "User: " %>
           <% my_team = current_user.team_members.map{|v| v.name.capitalize}.sort %>
-          <%= select :name , nil, my_team, :prompt => "" %><br/><br/>
+          <%= select :name , nil, my_team%><br/><br/>
           <%= label_tag "Start Date: " %><%= date_select(:start, :start_date) %>
           <%= label_tag "End Date: " %><%= date_select(:end, :end_date) %><br>
           <%= label_tag "Status: " %><br/>
