@@ -18,6 +18,8 @@ class Attendance < ActiveRecord::Base
       approval_status_changed =  self.changes[:approval_status]
       if !approval_status_changed.at(1).nil?
         UserMailer.changed_response(self.user, self).deliver
+      else
+        UserMailer.new_approval(self.manager, self).deliver
       end
     end
   end
@@ -27,9 +29,7 @@ class Attendance < ActiveRecord::Base
     UserMailer.new_approval(self.manager, self).deliver
   end
 
-  before_update do
-    UserMailer.new_approval(self.manager, self).deliver
-  end
+
   before_destroy do
     UserMailer.delete_request(self.manager, self).deliver
   end
