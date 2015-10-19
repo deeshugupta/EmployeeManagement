@@ -148,6 +148,7 @@ class DashboardController < ApplicationController
                               and leave_types.name like ?
                               and start_date >= ?
                               and end_date <= ?
+                              and is_leave_or_wfh = true
                               and approval_status = true",
                               name,'sick',start_date, end_date).sum('attendances.days')
 
@@ -156,6 +157,7 @@ class DashboardController < ApplicationController
                               and leave_types.name like ?
                               and start_date >= ?
                               and end_date <= ?
+                              and is_leave_or_wfh = true
                               and approval_status = true",
                        name,'casual',start_date, end_date).sum('attendances.days')
 
@@ -164,11 +166,12 @@ class DashboardController < ApplicationController
                               and leave_types.name like ?
                               and start_date >= ?
                               and end_date <= ?
+                              and is_leave_or_wfh = true
                               and approval_status = true",
                        name,'privilege',start_date, end_date).sum('attendances.days')
     @name = name
 
-    
+
 
   end
 
