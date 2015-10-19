@@ -168,29 +168,7 @@ class DashboardController < ApplicationController
                        name,'privilege',start_date, end_date).sum('attendances.days')
     @name = name
 
-    att_wfh = Attendance.where('is_leave_or_wfh = ?', false).group('user_id')
-    att_leaves = Attendance.where('is_leave_or_wfh = ?', true).group('user_id')
-
-    user_leaves_num = att_leaves.sum('days')
-    user_wfh_num = att_wfh.sum('days')
-
-    user_wfh_num.each do |att|
-      uid = att.first
-      uname = User.find(uid).name
-      puts uname
-      puts name
-      if uname.to_s == name
-        @work_from_home = uname + " took " + att.second.to_s + " work from home"
-      end
-    end
-
-    user_leaves_num.each do |att|
-      uid = att.first
-      uname = User.find(uid).name
-      if uname.to_s == name
-        @total_leaves = uname + " took " + att.second.to_s + " leaves"
-      end
-    end
+    
 
   end
 

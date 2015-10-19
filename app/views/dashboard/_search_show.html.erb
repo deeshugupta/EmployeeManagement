@@ -65,34 +65,7 @@
 </table>
 
 
-<% if false %>
 
-    <% att_wfh = Attendance.where('is_leave_or_wfh = ?', false).group('user_id') %>
-<% att_leaves = Attendance.where('is_leave_or_wfh = ?', true).group('user_id') %>
-
-
-<% user_leaves_num = att_leaves.sum('days') %>
-<% user_wfh_num = att_wfh.sum('days') %>
-<br/>
-
-<% user_leaves_num.each do |att| %>
-    <% uid = att.first %>
-    <% if uid != current_user.id %>
-        <% uname = User.find(uid).name %>
-        <%= uname + " took " + att.second.to_s + " leaves" %>
-    <% end %>
-    <br/>
-<% end %>
-
-<% user_wfh_num.each do |att| %>
-    <% uid = att.first %>
-    <% if uid != current_user.id %>
-        <% uname = User.find(uid).name %>
-        <%= uname + " took " + att.second.to_s + " work from home" %>
-    <% end %>
-    <br/>
-<% end %>
-<% end %>
 
 <script>
     $(document).ready(function () {
