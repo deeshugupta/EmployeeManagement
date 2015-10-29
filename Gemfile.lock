@@ -48,6 +48,9 @@ GEM
       warden (~> 1.2.1)
     erubis (2.7.0)
     execjs (2.6.0)
+    foundation-rails (5.5.3.2)
+      railties (>= 3.1.0)
+      sass (>= 3.3.0, < 3.5)
     hike (1.2.3)
     i18n (0.7.0)
     journey (1.0.4)
@@ -118,9 +121,13 @@ DEPENDENCIES
   client_side_validations
   coffee-rails (~> 3.2.1)
   devise
+  foundation-rails
   jquery-rails
   mysql2
   nprogress-rails
   rails (= 3.2.0)
   sass-rails (~> 3.2.3)
   uglifier (>= 1.0.3)
+
+BUNDLED WITH
+   1.10.6
