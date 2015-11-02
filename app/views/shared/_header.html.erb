@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="large-4 columns">
+    <h1><%= link_to image_tag('logo.jpg'), root_path %></h1> <%# 'http://placehold.it/400x100&text=ScreenShotz' %>
+    <!-- <a><img src="<%#= asset_path('logo.jpg') %>" id="site-logo" alt="Travel Triangle" /></a> -->
+
+  </div>
+  <div class="large-8 columns">
+    <ul class="right button-group">
+      <% if user_signed_in? %>
+        <!-- <li><%#= link_to 'Profile', profile_path, class: :button %></li> -->
+        <li><%= link_to 'Logout', destroy_user_session_path, class: :button %></li>
+      <% else %>
+        <li><%= link_to'Log in', new_user_session_path, class: :button %></li>
+        <!-- <li><%#= link_to 'Sign up', new_user_registration_url, class: :button %></li> -->
+      <% end %>
+
+    </ul>
+  </div>
+</div>

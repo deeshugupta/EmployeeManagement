@@ -11,9 +11,12 @@
  *= require jquery.sliderTabs.min
 
  *= require_self
+ //= require foundation_and_overrides
+
  *= require_tree .
  *= require nprogress
  *= require nprogress-bootstrap
+
 */
 table {
     border-collapse: collapse;

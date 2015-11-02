@@ -1,25 +1,27 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>EmployeeManagement</title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-  <div id="header">
-    <a><img src="<%= asset_path('logo.jpg') %>" id="site-logo" alt="Travel Triangle" /></a>
-  </div>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <p class="navbar-text pull-right">
-    <% if user_signed_in? %>
-        Welcome <strong><%= current_user.name %></strong><br/>
-        <%= link_to 'Edit profile', edit_user_registration_path, :class => 'top_links' %> |
-        <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => ' top_links'  %>
-    <% else %>
-        <%= link_to "Login", new_user_session_path, :class => ' top_links'  %>
-    <% end %>
-    <%=yield %>
-  </p>
-</body>
+    <title><%= content_for?(:title) ? yield(:title) : 'ScreenShotz' %></title>
+
+    <%= stylesheet_link_tag "application" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+  </head>
+
+  <body>
+    <div class="row">
+      <div class="large-12 columns">
+
+        <%= render 'shared/header' %>
+        <%= render 'shared/flash_messages' %>
+        <%= yield %>
+
+
+        <%= render 'shared/footer' %>
+      </div>
+    </div>
+  </body>
 </html>
