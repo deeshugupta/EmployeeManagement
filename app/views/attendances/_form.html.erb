@@ -1,8 +1,6 @@
-
 <% if @attendance.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@attendance.errors.count, "error") %> prohibited this attendance from being saved:</h2>
-
       <ul>
         <% @attendance.errors.full_messages.each do |msg| %>
             <li><%= msg %></li>
@@ -11,31 +9,55 @@
     </div>
 <% end %>
 
-  <div class="field">
-    <%= f.label :start_date %><br />
-    <%= f.date_select :start_date %>
-  </div>
-  <div class="field">
-    <%= f.label :days %><br />
-    <%= f.number_field :days, :class => 'text_field', :step => 0.5, required: true %>
-  </div>
-  <div>
-    Leave Type <br/>
-    <%= f.select :leave_type_id, options_for_select(LeaveType.all.map {|v| [v.name, v.id]}) %>
-  </div>
-  <div class="field">
-    <%= f.label "Leave or work from home?" %><br />
-    <%= f.radio_button :is_leave_or_wfh, true  %>
-    <%= f.label "Leave", :value => :is_leave_or_wfh %>
-    <%= f.radio_button :is_leave_or_wfh, false  %>
-    <%= f.label "Work From Home", :value => :is_leave_or_wfh %>
-  </div>
-  <div class="field">
-    <%= f.label :reason %><br />
-    <%= f.text_area :reason, :cols => 20, :rows=>5 , required: true%>
+<div class="row">
+  <div class="large-4 columns">
+    <label>Start Date
+      <%= f.date_select :start_date %>
+    </label>
   </div>
 
-  <div>
-    <%= f.submit 'Submit Request'%>
+  <div class="large-4 columns">
+    <div class="row collapse">
+      <%= f.label :days %>
+      <div class="small-12 columns">
+        <%= f.number_field :days, :step => 0.5, required: true %>
+      </div>
+    </div>
+
+    <div class="row collapse">
+      <label>Leave or work from home?</label>
+      <div class="small-12 columns">
+        <%= f.radio_button :is_leave_or_wfh, true  %>
+        <%= f.label "Leave", :value => :is_leave_or_wfh %>
+        <%= f.radio_button :is_leave_or_wfh, false  %>
+        <%= f.label "Work From Home", :value => :is_leave_or_wfh %>
+      </div>
+    </div>
   </div>
+
+  <div class="large-4 columns">
+    <div class="row collapse">
+      <%= f.label :leave_type_id, 'Leave Type' %>
+      <div class="small-12 columns">
+        <%= f.select :leave_type_id, options_for_select(LeaveType.all.map {|v| [v.name, v.id]}) %>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="large-12 columns">
+    <label>Reason
+      <%= f.text_area :reason, rows: 5 , required: true%>
+    </label>
+  </div>
+</div>
+
+<div class="row">
+  <div class="large-12 columns">
+    <%= f.submit 'Submit Request', class: 'button' %>
+  </div>
+</div>
+
 
