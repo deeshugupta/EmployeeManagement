@@ -1,28 +1,30 @@
-<%= link_to 'Home', root_path %>
+<%= back_to_home_button %>
 
-<h1>Listing roles</h1>
+<h1>Roles</h1>
 
 <table>
-  <tr>
-    <th>Working days</th>
-    <th>Name</th>
-    <th>Leaves applicable</th>
-    <th>Actions</th>
+  <thead>
+    <th width="10%">Working days</th>
+    <th width="20%">Name</th>
+    <th width="30%">Leaves applicable</th>
+    <th width="20%">Actions</th>
 
-  </tr>
+  </thead>
 
 <% @roles.each do |role| %>
   <tr>
     <td><%= role.working_days %></td>
     <td><%= role.name %></td>
     <td><%= role.leaves_applicable %></td>
-    <td><%= link_to 'Show', role,:class=>"actions" %>
-    <%= link_to 'Edit', edit_role_path(role),:class=>"actions" %>
-    <%= link_to 'Destroy', role, confirm: 'Are you sure?', method: :delete ,:class=>"actions"%></td>
+    <td>
+      <%= link_to 'Show', role, class: 'button tiny secondary' %>
+      <%= link_to 'Edit', edit_role_path(role), class: 'button tiny secondary' %>
+      <%= link_to 'Destroy', role, confirm: 'Are you sure?', method: :delete , class: 'button tiny alert' %>
+    </td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Role', new_role_path %>
+<%= link_to 'New Role', new_role_path, class: 'button small' %>
