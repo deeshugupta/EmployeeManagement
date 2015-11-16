@@ -27,10 +27,10 @@
     <div class="row collapse">
       <label>Leave or work from home?</label>
       <div class="small-12 columns">
-        <%= f.radio_button :is_leave_or_wfh, true  %>
-        <%= f.label "Leave", :value => :is_leave_or_wfh %>
-        <%= f.radio_button :is_leave_or_wfh, false  %>
-        <%= f.label "Work From Home", :value => :is_leave_or_wfh %>
+        <%= f.radio_button :is_leave_or_wfh, true, id: :leave_type  %>
+        <%= f.label "Leave", for: :leave_type %>
+        <%= f.radio_button :is_leave_or_wfh, false, id: :wfh_type  %>
+        <%= f.label "Work From Home", for: :wfh_type %>
       </div>
     </div>
   </div>
