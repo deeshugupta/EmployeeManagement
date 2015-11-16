@@ -12,11 +12,11 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require foundation
 //= require jquery.sliderTabs
 //= require jquery.sliderTabs.min
 //= require helper
 //= require_tree .
+//= require foundation
 //= require nprogress
 //= require nprogress-turbolinks
 

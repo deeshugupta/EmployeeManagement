@@ -40,3 +40,11 @@ gem 'foundation-rails'
 
 gem 'devise'
 gem 'nprogress-rails'
+
+group :development do
+  gem 'annotate'
+  gem 'pry-rails'
+  gem 'quiet_assets'
+  gem 'xray-rails'
+  gem 'thin'
+end

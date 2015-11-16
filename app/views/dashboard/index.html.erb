@@ -1,44 +1,53 @@
-<style>
-    a.img_style:hover {
-        background: transparent;
-    }
+<br><br>
+<div class="row">
+  <% if is_admin  or true %>
+    <ul class="stack-for-small round secondary button-group">
+      <li><%= link_to "Manage Roles", {:controller => 'roles'}, :class => 'secondary button small' %></li>
+      <li><%= link_to "Show All Users", users_path, :class => 'secondary button small' %></li>
+    </ul>
+  <% end %>
+  <br>
 
-</style>
-<% if is_admin %>
-     | <%= link_to "Manage Roles", {:controller => 'roles'}, :class => ' top_links' %>
-     | <%= link_to "Show All Users", users_path, :class => 'top_links' %>
-<% end %>
-<br/><br/>
-<br/>
+  <div class="row">
+    <div class="large-1 columns"> </div>
+    <div class="large-4 large-offset-3 columns">
+      <ul class="stack button-group">
+        <li>&nbsp;</li>
+        <li><%= link_to "View Available Leaves", available_leaves_attendances_path, :class => "button" %></li>
+        <li>&nbsp;</li>
+        <li><%= link_to "View My Leave Requests", my_requests_attendances_path, :class => "button" %></li>
+        <li>&nbsp;</li>
+        <li><%= link_to "Submit New Request", apply_leave_attendances_path, :class => "button" %></li>
 
-<%= button_to "View Available Leaves", available_leaves_attendances_path, :class => "dashboard_buttons" %>
-<br/>
+        <% if current_user.roles.include?(Role.find_by_name(:manager)) || true %>
+          <li>&nbsp;</li>
+          <li><%= link_to "Pending Approvals", pending_approvals_attendances_path, :class => "button" %></li>
+          <li>&nbsp;</li>
+          <li><%= link_to "My Team Members", my_team_dashboard_index_path, :class => "button" %></li>
+        <% end %>
 
-<%= button_to "View My Leave Requests", my_requests_attendances_path, :class => "dashboard_buttons" %>
-<br/>
-<%= button_to "Submit New Request", apply_leave_attendances_path, :class => "dashboard_buttons" %>
+        <% if current_user.roles.include?(Role.find_by_name(:Admin)) %>
+          <li>&nbsp;</li>
+          <li><%= link_to "Create new user", {action: 'new'}, :class => "button" %></li>
+        <% end %>
 
-<% if current_user.roles.include?(Role.find_by_name(:manager)) %>
-    <br/>
-    <%= button_to "Pending Approvals", pending_approvals_attendances_path, :class => "dashboard_buttons" %>
-    <br/>
-    <%= button_to "My Team Members", my_team_dashboard_index_path, :class => "dashboard_buttons" %>
-<% end %>
-
-<% if current_user.roles.include?(Role.find_by_name(:Admin)) %>
-    <br/>
-    <%= button_to "Create new user", {action: 'new'}, :class => "dashboard_buttons" %>
-<% end %>
-<br/>
-
-<% if current_user.roles.include?(Role.find_by_name(:Admin)) ||  current_user.roles.include?(Role.find_by_name(:manager)) %>
-    <%= button_to "Search Leave Request", search_pending_approvals_attendances_path, :class => "dashboard_buttons" %>
-<%end%>
+        <% if current_user.roles.include?(Role.find_by_name(:Admin)) ||  current_user.roles.include?(Role.find_by_name(:manager)) %>
+          <li>&nbsp;</li>
+          <li><%= link_to "Search Leave Request", search_pending_approvals_attendances_path, :class => "button" %></li>
+        <%end%>
+      </ul>
+    </div>
+    <div class="large-4 columns"></div>
+  </div>
 
 
-<div class="clear" style="clear:both"></div>
-<br/>
-<br/>
+</div>
+
+
+
+<!-- <div class="clear" style="clear:both"></div> -->
+
+
 
 <script>
     $(document).ready(function () {
