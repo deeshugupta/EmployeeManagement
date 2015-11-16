@@ -47,4 +47,5 @@ group :development do
   gem 'quiet_assets'
   gem 'xray-rails'
   gem 'thin'
+  gem 'letter_opener'
 end

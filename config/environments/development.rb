@@ -37,19 +37,20 @@ EmployeeManagement::Application.configure do
 
 
   #action mailer configs
-  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.delivery_method = :letter_opener
+  # config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_url_options = { :host => "localhost:3000" }
 
-  config.action_mailer.smtp_settings = {
-      :enable_starttls_auto => true,  #this is the important stuff!
-      :address        => 'smtp.gmail.com',
-      :port           => 587,
-      :domain         => 'gmail.com',
-      :authentication => :plain,
-      :user_name      => 'tt.tester.noida@gmail.com',
-      :password       => 'tt.P@55w0rd'
-  }
+  # config.action_mailer.smtp_settings = {
+  #     :enable_starttls_auto => true,  #this is the important stuff!
+  #     :address        => 'smtp.gmail.com',
+  #     :port           => 587,
+  #     :domain         => 'gmail.com',
+  #     :authentication => :plain,
+  #     :user_name      => 'tt.tester.noida@gmail.com',
+  #     :password       => 'tt.P@55w0rd'
+  # }
 
 end
