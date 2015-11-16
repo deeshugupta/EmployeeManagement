@@ -1,10 +1,13 @@
 class UsersController < ApplicationController
+
   def show
     @user = User.find(params[:id])
   end
+
   def index
-    @users = User.all
+    @users = User.order(:name)
   end
+
   def edit
     @user = User.find(params[:id])
     if @user.manager_id != current_user.id
@@ -18,6 +21,7 @@ class UsersController < ApplicationController
 
     @roles_available = Role.all
   end
+
   def update
     @user = User.find(params[:id])
     @user.roles.destroy_all
@@ -38,6 +42,7 @@ class UsersController < ApplicationController
       render 'edit'
     end
   end
+
   def destroy
     User.find(params[:id]).destroy
     redirect_to users_path

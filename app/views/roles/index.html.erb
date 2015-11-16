@@ -1,6 +1,6 @@
-<%= back_to_home_button %>
+<%#= back_to_home_button %>
 
-<h1>Roles</h1>
+<h2>Roles</h2>
 
 <table>
   <thead>
@@ -10,19 +10,20 @@
     <th width="20%">Actions</th>
 
   </thead>
-
-<% @roles.each do |role| %>
-  <tr>
-    <td><%= role.working_days %></td>
-    <td><%= role.name %></td>
-    <td><%= role.leaves_applicable %></td>
-    <td>
-      <%= link_to 'Show', role, class: 'button tiny secondary' %>
-      <%= link_to 'Edit', edit_role_path(role), class: 'button tiny secondary' %>
-      <%= link_to 'Destroy', role, confirm: 'Are you sure?', method: :delete , class: 'button tiny alert' %>
-    </td>
-  </tr>
-<% end %>
+  <tbody>
+    <% @roles.each do |role| %>
+      <tr>
+        <td><%= role.working_days %></td>
+        <td><%= role.name %></td>
+        <td><%= role.leaves_applicable %></td>
+        <td>
+          <%= link_to 'Show', role, class: 'button tiny secondary' %>
+          <%= link_to 'Edit', edit_role_path(role), class: 'button tiny secondary' %>
+          <%= link_to 'Destroy', role, confirm: 'Are you sure?', method: :delete , class: 'button tiny alert' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 
 <br />
