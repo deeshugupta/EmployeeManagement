@@ -1,6 +1,6 @@
 <br><br>
 <div class="row">
-  <% if is_admin  or true %>
+  <% if is_admin %>
     <ul class="stack-for-small round secondary button-group">
       <li><%= link_to "Manage Roles", {:controller => 'roles'}, :class => 'secondary button small' %></li>
       <li><%= link_to "Show All Users", users_path, :class => 'secondary button small' %></li>
@@ -19,7 +19,7 @@
         <li>&nbsp;</li>
         <li><%= link_to "Submit New Request", apply_leave_attendances_path, :class => "button" %></li>
 
-        <% if current_user.roles.include?(Role.find_by_name(:manager)) || true %>
+        <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
           <li>&nbsp;</li>
           <li><%= link_to "Pending Approvals", pending_approvals_attendances_path, :class => "button" %></li>
           <li>&nbsp;</li>
