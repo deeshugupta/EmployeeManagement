@@ -40,6 +40,7 @@ gem 'foundation-rails'
 
 gem 'devise'
 gem 'nprogress-rails'
+gem 'airbrake'
 
 group :development do
   gem 'annotate'
