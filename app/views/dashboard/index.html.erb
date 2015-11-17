@@ -9,8 +9,8 @@
   <br>
 
   <div class="row">
-    <div class="large-1 columns"> </div>
-    <div class="large-4 large-offset-3 columns">
+    <div class="large-3 columns">&nbsp;&nbsp;&nbsp;</div>
+    <div class="large-6 columns">
       <ul class="stack button-group">
         <li>&nbsp;</li>
         <li><%= link_to "View Available Leaves", available_leaves_attendances_path, :class => "button" %></li>
@@ -28,7 +28,7 @@
 
         <% if current_user.roles.include?(Role.find_by_name(:Admin)) %>
           <li>&nbsp;</li>
-          <li><%= link_to "Create new user", {action: 'new'}, :class => "button" %></li>
+          <li><%= link_to "Create new user", new_user_path, :class => "button" %></li>
         <% end %>
 
         <% if current_user.roles.include?(Role.find_by_name(:Admin)) ||  current_user.roles.include?(Role.find_by_name(:manager)) %>
@@ -37,7 +37,7 @@
         <%end%>
       </ul>
     </div>
-    <div class="large-4 columns"></div>
+    <div class="large-3 columns"></div>
   </div>
 
 

@@ -1,0 +1,99 @@
+<%= form_for(@user) do |f| %>
+
+    <div class="row">
+      <div class="large-4 columns">
+        <label> Email
+          <%= f.email_field :email, :autofocus => true %>
+        </label>
+      </div>
+
+      <div class="large-4 columns">
+        <label> Name
+          <%= f.text_field :name %>
+        </label>
+      </div>
+
+      <div class="large-4 columns">
+        <label> Employee Code
+          <%= f.number_field(:employee_code) %>
+        </label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-4 columns">
+        <label> Casual Leaves Applicable
+          <%= f.number_field(:casual, :step => 0.25) %>
+        </label>
+      </div>
+
+      <div class="large-4 columns">
+        <label> Sick Leaves Applicable
+          <%= f.number_field(:sick, :step => 0.25) %>
+        </label>
+      </div>
+
+      <div class="large-4 columns">
+        <label> Privilege Leaves Applicable
+          <%= f.number_field(:privilege, :step => 0.25) %>
+        </label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-4 columns">
+        <% manager_name = @user.manager.nil? ? @default_manager_name : @user.manager.name %>
+        <% manager_id = @user.manager.nil? ? @default_manager_id : @user.manager.id %>
+        <label> Manager
+          <% if @managers %>
+            <%= f.select :manager_id, options_for_select(@managers.map { |v| [v.name, v.id] }, [manager_name, manager_id]) %>
+          <% end %>
+        </label>
+      </div>
+
+      <div class="large-8 columns">
+        <label> Role</label>
+
+        <% if @roles_available %>
+          <% @roles_available.each do |role| %>
+            <% if @user.roles.include?(role) %>
+              <%= check_box_tag 'role[]', role.id, :checked => true %>
+            <% else %>
+              <%= check_box_tag 'role[]', role.id %>
+            <% end %>
+            <label><%= role.name %></label>
+          <% end %>
+        <% end %>
+      </div>
+
+    </div>
+
+    <% if @user.new_record? %>
+      <div class="row">
+        <div class="large-4 columns">
+          <label> Joining Date
+            <%= f.date_select :join_date %>
+          </label>
+        </div>
+        <div class="large-4 columns">
+          <label> Password
+            <%= f.password_field :password, autocomplete: :off, required: true %>
+          </label>
+        </div>
+        <div class="large-4 columns">
+          <label> Confirmation Password
+            <%= f.password_field :password_confirmation, autocomplete: :off, required: true %>
+          </label>
+        </div>
+      </div>
+    <% end %>
+
+
+    <br>
+    <div class="row">
+      <div class="large-12 columns">
+        <%= f.submit nil, class: 'button' %>
+      </div>
+    </div>
+
+<% end %>
