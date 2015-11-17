@@ -1,32 +1,55 @@
-<%= back_to_home_button %>
-
-<h1>Search Leave Requests</h1>
+<h2>Search Leave Requests</h2>
 
 <div>
   <% if current_user.roles.include?(Role.find_by_name(:manager)) || current_user.roles.include?(Role.find_by_name(:admin)) %>
-      <%= form_tag(dashboard_search_path , :remote => true, :id => "search_form") do %>
-          <%= label_tag "User: " %>
-          <% my_team = current_user.team_members.map{|v| v.name.capitalize}.sort %>
-          <%= select :name , nil, my_team%><br/><br/>
-          <%= label_tag "Start Date: " %><%= date_select(:start, :start_date) %>
-          <%= label_tag "End Date: " %><%= date_select(:end, :end_date) %><br>
-          <%= label_tag "Status: " %><br/>
-          <%= check_box_tag :pending %><%= label_tag "pending " %>
-          <%= check_box_tag :approved %><%= label_tag "approved " %>
-          <%= check_box_tag :rejected %><%= label_tag "rejected " %><br/>
-          <%= label_tag "Leave Category: " %><br/>
-          <%= check_box_tag :leave %><%= label_tag "Leave " %>
-          <%= check_box_tag :wfh %><%= label_tag "Work From Home " %><br/>
-          <%= label_tag "Leave Type: "%><br/>
-          <%= check_box_tag :casual %><%= label_tag "Casual " %>
-          <%= check_box_tag :sick %><%= label_tag "Sick " %>
-          <%= check_box_tag :privilege %><%= label_tag "Privilege " %>
-          <br/>
-          <%= submit_tag("search") %>
+    <%= form_tag(dashboard_search_path , :remote => true, :id => "search_form") do %>
 
-      <% end %>
+      <div class="row">
+        <div class="large-4 columns">
+          <div class="row">
+            <label> User:
+              <% my_team = current_user.team_members.map{|v| v.name.capitalize}.sort %>
+              <%= select :name , nil, my_team%>
+            </label>
+          </div>
+          <div class="row">
+            <label> Status</label>
+            <%= check_box_tag :pending %><%= label_tag "pending " %>
+            <%= check_box_tag :approved %><%= label_tag "approved " %>
+            <%= check_box_tag :rejected %><%= label_tag "rejected " %>
+          </div>
+          <div class="row">
+            <label> Leave Category</label>
+            <%= check_box_tag :leave %><%= label_tag "Leave " %>
+            <%= check_box_tag :wfh %><%= label_tag "Work From Home " %>
+          </div>
+          <div class="row">
+            <label> Leave Type</label>
+            <%= check_box_tag :casual %><%= label_tag "Casual " %>
+            <%= check_box_tag :sick %><%= label_tag "Sick " %>
+            <%= check_box_tag :privilege %><%= label_tag "Privilege " %>
+          </div>
+        </div>
+
+        <div class="large-4 columns">
+          <label> Start Date:
+            <%= date_select(:start, :start_date) %>
+          </label>
+        </div>
+
+        <div class="large-4 columns">
+          <label> End Date:
+            <%= date_select(:end, :end_date) %>
+          </label>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <%= submit_tag "search", class: 'button' %>
+      </div>
+    <% end %>
   <% end %>
 </div>
+
 <span id="search_results_count" style="display: block;"></span>
-<div id="search_results">
-</div>
+<div id="search_results"></div>
