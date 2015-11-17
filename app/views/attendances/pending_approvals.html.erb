@@ -1,7 +1,5 @@
-<%= back_to_home_button %>
-
-<h1>Pending Approvals</h1>
+<h2>Pending Approvals</h2>
 
 <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
-    <%= render(:partial => 'dashboard/attendance_show', :locals => {:attendances => current_user.approvals.where(approval_status: nil)}) %>
+  <%= render partial: 'dashboard/attendance_show', locals: {attendances: current_user.approvals.where(approval_status: nil)} %>
 <% end %>

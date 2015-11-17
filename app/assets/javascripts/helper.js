@@ -16,7 +16,7 @@ function click_approval(){
       approvals.toggle();
        var hidden =  approvals.find("#approval_type");
         hidden.val($(this).text());
-        });
+    });
 }
 
 
