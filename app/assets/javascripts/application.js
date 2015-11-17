@@ -20,4 +20,4 @@
 //= require nprogress
 //= require nprogress-turbolinks
 
-$(function(){ $(document).foundation(); });
+$(function(){ $(document).foundation();});

@@ -7,6 +7,8 @@
     <title><%= content_for?(:title) ? yield(:title) : 'Leave Management' %></title>
 
     <%= stylesheet_link_tag "application" %>
+    <%# Modernizr is required for Zurb Foundation %>
+    <%= javascript_include_tag "vendor/modernizr" %>
     <%= javascript_include_tag "application" %>
     <%= csrf_meta_tags %>
   </head>
