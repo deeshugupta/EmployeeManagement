@@ -1,36 +1,68 @@
-<%= link_to 'Home', root_path %>
 <h2>Edit Profile</h2>
 
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:method => :put}) do |f| %>
-    <%= devise_error_messages! %>
+  <%= devise_error_messages! %>
 
-    <div><%= f.label :email %><br/>
-      <%= f.email_field :email, :autofocus => true, :disabled => true %></div>
+  <fieldset>
+    <legend>Basic info</legend>
 
-    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-        <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-    <% end %>
+    <div class="row">
+      <div class="large-4 columns">
+        <label> Email
+          <%= f.email_field :email, :autofocus => true, :disabled => true %>
+        </label>
+      </div>
 
-    <div><%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br/>
-      <%= f.password_field :password, :autocomplete => "off" %></div>
+      <div class="large-4 columns">
+        <label> Name
+          <%= f.text_field :name, :disabled => true %>
+        </label>
+      </div>
 
-    <div><%= f.label :password_confirmation %><br/>
-      <%= f.password_field :password_confirmation %></div>
-
-    <div><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br/>
-      <%= f.password_field :current_password %></div>
-
-    <div><%= f.label "Name" %><br/>
-      <%= f.text_field :name, :disabled => true %></div>
-
-    <div><%= f.label "Manager" %><br/>
-      <% if !resource.manager.blank? %>
-          <input type="text" disabled="disabled" value="<%= resource.manager.name %>">
-      <% end %>
+      <div class="large-4 columns">
+        <label> Manager
+          <% if !resource.manager.blank? %>
+            <input type="text" disabled="disabled" value="<%= resource.manager.name %>">
+          <% end %>
+        </label>
+      </div>
     </div>
 
-    <div><%= f.label "Joining Date" %><br/>
-      <%= f.date_select :join_date, :disabled => true %></div><br/>
+    <div class="row">
+      <div class="large-4 columns">
+        <div class="row collapse">
+          <label> Joining Date
+            <input type="text" disabled="disabled" value="<%= resource.join_date %>">
+          </label>
+        </div>
+      </div>
+    </div>
+  </fieldset>
 
-    <div><%= f.submit "Update" %></div>
+  <fieldset>
+    <legend>Change password</legend>
+
+    <div class="row">
+      <div class="large-4 columns">
+        <label> Password <small><i>(leave blank if you don't want to change it)</i></small>
+          <%= f.password_field :password, :autocomplete => "off" %>
+        </label>
+      </div>
+
+      <div class="large-4 columns">
+        <label> Password Confirmation
+          <%= f.password_field :password_confirmation %>
+        </label>
+      </div>
+
+      <div class="large-4 columns">
+        <label> Current Password <small><i>(its needed to confirm your changes)</i> </small>
+          <%= f.password_field :current_password %>
+        </label>
+      </div>
+    </div>
+
+    <%= f.submit "Update", class: 'button ' %>
+  </fieldset>
+
 <% end %>
