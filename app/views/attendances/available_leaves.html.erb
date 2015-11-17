@@ -1,8 +1,6 @@
-<%#= back_to_home_button %>
-
 <h2>My Available Leaves</h2>
 <table>
-  <tr>
+  <thead>
     <th>Member Name</th>
     <th>Casual Leaves</th>
     <th>Sick Leaves</th>
@@ -13,18 +11,21 @@
     <th>Privilege Leaves Remaining</th>
   </tr>
 
-  <tr>
-    <td><%= current_user.name %></td>
-    <% cleaves = current_user.attendances.joins(:leave_type).where(:is_leave_or_wfh => true).where(:approval_status => true).where("leave_types.name = 'Casual' ").sum(:days) %>
-    <% sleaves = current_user.attendances.joins(:leave_type).where(:is_leave_or_wfh => true).where(:approval_status => true).where("leave_types.name = 'Sick' ").sum(:days) %>
-    <% pleaves = current_user.attendances.joins(:leave_type).where(:is_leave_or_wfh => true).where(:approval_status => true).where("leave_types.name = 'Privilege' ").sum(:days) %>
-    <td><%= cleaves %></td>
-    <td><%= sleaves %></td>
-    <td><%= pleaves %></td>
-    <td><%= current_user.attendances.where(:is_leave_or_wfh => false).where(:approval_status => true).sum(:days) %></td>
-    <% leaves_applicable = current_user.casual.to_f+current_user.sick.to_f+current_user.privilege.to_f %>
-    <td><%= current_user.casual.to_f - cleaves.to_f%></td>
-    <td><%= current_user.sick.to_f - sleaves.to_f %></td>
-    <td><%= current_user.privilege.to_f - pleaves.to_f %></td>
-  </tr>
+  <thead>
+  <tbody>
+    <tr>
+      <td><%= current_user.name %></td>
+      <% cleaves = current_user.attendances.joins(:leave_type).where(:is_leave_or_wfh => true).where(:approval_status => true).where("leave_types.name = 'Casual' ").sum(:days) %>
+      <% sleaves = current_user.attendances.joins(:leave_type).where(:is_leave_or_wfh => true).where(:approval_status => true).where("leave_types.name = 'Sick' ").sum(:days) %>
+      <% pleaves = current_user.attendances.joins(:leave_type).where(:is_leave_or_wfh => true).where(:approval_status => true).where("leave_types.name = 'Privilege' ").sum(:days) %>
+      <td><%= cleaves %></td>
+      <td><%= sleaves %></td>
+      <td><%= pleaves %></td>
+      <td><%= current_user.attendances.where(:is_leave_or_wfh => false).where(:approval_status => true).sum(:days) %></td>
+      <% leaves_applicable = current_user.casual.to_f+current_user.sick.to_f+current_user.privilege.to_f %>
+      <td><%= current_user.casual.to_f - cleaves.to_f%></td>
+      <td><%= current_user.sick.to_f - sleaves.to_f %></td>
+      <td><%= current_user.privilege.to_f - pleaves.to_f %></td>
+    </tr>
+  </tbody>
 </table>
