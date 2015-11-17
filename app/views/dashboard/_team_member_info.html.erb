@@ -1,9 +1,13 @@
-| <%= link_to 'Home', root_path, :class => "top_links" %>
-<table>
-  <tr>
-    <th>Member Name</th><th>Leaves Taken</th><th>Work From Home Taken</th><th>Total Leaves</th><th>Leaves Remaining</th>
-  </tr>
-  <% current_user.team_members.each do |member| %>
+<table width="100%">
+  <thead>
+    <th>Member Name</th>
+    <th>Leaves Taken</th>
+    <th>Work From Home Taken</th>
+    <th>Total Leaves</th>
+    <th>Leaves Remaining</th>
+  </thead>
+  <tbody>
+    <% current_user.team_members.order(:name).each do |member| %>
       <tr>
         <td><%=member.name%></td>
         <% leaves = member.attendances.where(:is_leave_or_wfh => true).where(:approval_status => true).sum(:days) %>
@@ -13,5 +17,6 @@
         <td><%= leaves_applicable %></td>
         <td><%= leaves_applicable.to_f - leaves.to_f %></td>
       </tr>
-  <% end %>
+    <% end %>
+  </tbody>
 </table>
