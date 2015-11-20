@@ -11,19 +11,15 @@
  *= require jquery.sliderTabs.min
 
  *= require_self
+ //= require foundation_and_overrides
+
  *= require_tree .
  *= require nprogress
  *= require nprogress-bootstrap
+ *= foundation/components/tables
 */
-table {
-    border-collapse: collapse;
-}
 
-table, th,  td{
-    border: 1px solid #000000;
-    text-align: center;
-    padding: 10px;
-}
+
 
 .actions{
     border: 1px solid #e37504;
@@ -60,4 +56,8 @@ table, th,  td{
 }
 .top_links:hover{
   background-color: #cccccc;
+}
+
+a.img_style:hover {
+    background: transparent;
 }

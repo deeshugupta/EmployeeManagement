@@ -1,9 +1,8 @@
-| <%= link_to 'Back', {:controller => :dashboard, :action => 'index'}, :class => "top_links" %>
+<%#= back_to_home_button %>
 
 <h1>Apply Leave</h1>
 
-<% @attendance = Attendance.new %>
 <%= form_for :attendance, :url => {:action => :create} do |f| %>
-    <%= render :partial => 'attendances/form', :locals => {:f => f} %>
+  <%= render :partial => 'attendances/form', :locals => {:f => f} %>
 <% end %>
 

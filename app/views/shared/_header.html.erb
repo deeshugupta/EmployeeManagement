@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="large-4 columns">
+    <h1><%= link_to image_tag('logo.jpg'), root_path %></h1>
+  </div>
+
+  <div class="large-8 columns">
+    <ul class="right button-group">
+      <% if user_signed_in? %>
+        <li><h6 class='subheader'>Welcome <strong><%= current_user.name %></strong>&nbsp;&nbsp;</h6></li>
+        <li><%= link_to 'Profile', edit_user_registration_path, class: :button %></li>
+        <li><%= link_to 'Logout', destroy_user_session_path, method: :delete, class: :button %></li>
+      <% else %>
+        <li><%= link_to'Log in', new_user_session_path, class: :button %></li>
+      <% end %>
+
+    </ul>
+  </div>
+</div>

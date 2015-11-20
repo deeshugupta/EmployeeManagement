@@ -1,83 +1,45 @@
 <table>
-  <tr>
-    <th>
-      Name
-    </th>
-    <th>
-      From Date
-    </th>
-    <th>
-      To Date
-    </th>
-    <th>
-      Category
-    </th>
-    <th>
-      Leave Type
-    </th>
-    <th>
-      Days
-    </th>
-    <th>
-      Reason
-    </th>
-    <th>
-      Status
-    </th>
-    <th>
-      Actions
-    </th>
-  </tr>
-  <% attendances.each do |approval|%>
+  <thead>
+    <th>Name</th>
+    <th>From Date</th>
+    <th>To Date</th>
+    <th>Category</th>
+    <th>Leave Type</th>
+    <th>Days</th>
+    <th>Reason</th>
+    <th>Status</th>
+    <th colspan="2" width="37%">Actions</th>
+  </thead>
+  <tbody>
+    <% attendances.each do |approval|%>
       <tr>
+        <td><%= approval.user.name %></td>
+        <td><%= date_format(approval.start_date) %></td>
+        <td><%= date_format(approval.end_date) %></td>
+        <td><%= approval.is_leave_or_wfh ? 'Leave' : 'Work From Home' %></td>
+        <td><%= approval.leave_type.name %></td>
+        <td><%= approval.days %></td>
+        <td><%= approval.reason %></td>
+        <td><%= attendance_current_status(approval) %></td>
         <td>
-          <%= approval.user.name %>
-        </td>
-        <td>
-          <%= date_format(approval.start_date) %>
-        </td>
-        <td>
-          <%= date_format(approval.end_date) %>
-        </td>
-        <td>
-          <%= approval.is_leave_or_wfh ? 'Leave' : 'Work From Home' %>
-        </td>
-        <td>
-          <%= approval.leave_type.name %>
-        </td>
-        <td>
-          <%= approval.days %>
-        </td>
-        <td>
-          <%= approval.reason %>
-        </td>
-        <td>
-          <%= attendance_current_status(approval) %>
+          <%= link_to('show', {controller: 'attendances', action: 'show', id: approval.id}, class: "button secondary tiny")%>
         </td>
         <td id="approval<%= approval.id%>">
-          <%= link_to("show",{:controller => 'attendances', :action => 'show', :id => approval.id},:class=>"actions")%><br/><br/>
-
-
           <%= form_tag approve_dashboard_index_path , :html=>{:class => "approval_comments"} do %>
               <div class="field">
-
                 <%= text_area_tag :comments, "", :placeholder => "Comments",:cols=>25, :rows=>5, :style => "resize: none;" %>
               </div>
               <%= hidden_field_tag("approval_id",approval.id) %>
 
-              <%= submit_tag "Approve" %>
-              <%= submit_tag "Reject" %>
-              <%= submit_tag "Comment" %>
+              <ul class="button-group">
+                <li><%= submit_tag 'Approve', class: 'button tiny', data: {confirm: 'Are you sure you wanna approve this!'} %></li>
+                <li><%= submit_tag 'Reject', class: 'button tiny', data: {confirm: 'Are you sure you wanna reject this!'} %></li>
+                <li><%= submit_tag 'Comment', class: 'button tiny' %></li>
+              </ul>
           <% end %>
 
         </td>
       </tr>
-  <% end %>
-
+    <% end %>
+  </tbody>
 </table>
-
-<script>
-    $(document).ready(function() {
-        click_approval();
-    })
-</script>

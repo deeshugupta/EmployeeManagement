@@ -1,51 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<div id="header">
-  <a ><img src="<%= asset_path('logo.jpg') %>" id="site-logo" alt="Travel Triangle" /></a>
-</div>
+    <title><%= content_for?(:title) ? yield(:title) : 'Leave Management' %></title>
 
-<head>
-  <title>EmployeeManagement</title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
-<p class="navbar-text pull-right">
-  <% if user_signed_in? %>
-      Welcome <strong><%= current_user.name %></strong><br/>
-      <%= link_to 'Edit profile', edit_user_registration_path, :class => 'top_links' %> |
-      <%= link_to "Logout", destroy_user_session_path, method: :delete, :class => ' top_links'  %>
-  <% else %>
-      <%= link_to "Login", new_user_session_path, :class => ' top_links'  %>
-  <% end %>
-  <%=yield %>
+    <%= stylesheet_link_tag "application" %>
+    <%# Modernizr is required for Zurb Foundation %>
+    <%= javascript_include_tag "vendor/modernizr" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+  </head>
 
-  <!--<div id="mySliderTabs">
-    &lt;!&ndash; Unordered list representing the tabs &ndash;&gt;
-    <ul>
-      <li><a href="#canyon">The Grand Canyon</a></li>
-      <li><a href="#taj">The Taj Mahal</a></li>
-      <li><a href="#bigben">Big Ben</a></li>
-    </ul>
+  <body>
+    <div class="row">
+      <div class="large-12 columns">
 
-    &lt;!&ndash; Afterwards, include the div panels representing the panels of our slider &ndash;&gt;
-    <div id="canyon">
-      <h3>The Grand Canyon</h3>
-      &lt;!&ndash; rest of the panel content &ndash;&gt;
+        <%= render 'shared/header' %>
+        <%= render 'shared/flash_messages' %>
+        <%= yield %>
+
+
+        <%= render 'shared/footer' %>
+      </div>
     </div>
-    <div id="taj">
-      <h3>The Taj Mahal</h3>
-      &lt;!&ndash; rest of the panel content &ndash;&gt;
-    </div>
-    <div id="bigben">
-      <h3>Big Ben</h3>
-      &lt;!&ndash; rest of the panel content &ndash;&gt;
-    </div>
-  </div>
-
-  <script>var slider = $("div#mySliderTabs").sliderTabs();</script>-->
-
-</body>
+  </body>
 </html>

@@ -1,6 +1,10 @@
 EmployeeManagement::Application.routes.draw do
 
-  devise_for :users
+  devise_for :users, skip: :registrations
+  devise_scope :user do
+    resource :registration, only: [:edit, :update], path: 'users', controller: 'devise/registrations', as: :user_registration
+  end
+
   root :to => 'dashboard#index'
   resources :roles
   resources :attendances do

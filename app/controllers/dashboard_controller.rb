@@ -6,30 +6,7 @@ class DashboardController < ApplicationController
     @attendance = Attendance.new
   end
 
-  def create
-    @user=User.new(params[:user])
-    if params[:role].present?
-      params[:role].each do |id|
-        role = Role.find(id.to_i)
-        @user.roles << role
-      end
-    else
-      @user.roles << Role.find_by_name(:employee)
-    end
-
-    if @user.save!
-      redirect_to root_path
-    end
-  end
-
-  def new
-    @managers = User.all(:include => :roles, :conditions => ["roles.name = ?", "Manager"])
-    @roles_available = Role.all
-    @user = User.new
-  end
-
   def approve
-
     @attendance = Attendance.find(params[:approval_id])
     approval_type = params[:commit]
     type = nil

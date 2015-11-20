@@ -16,5 +16,8 @@
 //= require jquery.sliderTabs.min
 //= require helper
 //= require_tree .
+//= require foundation
 //= require nprogress
 //= require nprogress-turbolinks
+
+$(function(){ $(document).foundation();});

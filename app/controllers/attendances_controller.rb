@@ -95,4 +95,8 @@ class AttendancesController < ApplicationController
       redirect_to :controller => 'dashboard', :notice => "Attendance Deleted successfully"
     end
   end
+
+  def apply_leave
+    @attendance = Attendance.new
+  end
 end

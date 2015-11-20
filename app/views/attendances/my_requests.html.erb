@@ -1,68 +1,47 @@
-| <%= link_to 'Back', root_path , :class => "top_links"%>
+<h2>My requests</h2>
 
-<% if current_user.attendances.count>0 %>
-    <table>
-      <tr>
-        <td>
-          From Date
-        </td>
-        <td>
-          To Date
-        </td>
-        <td>
-          Category
-        </td>
-        <td>
-          Leave Type
-        </td>
-        <td>
-          Status
-        </td>
-        <td>
-          Actions
-        </td>
-      </tr>
+<% if current_user.attendances.count > 0 %>
+  <table width="100%">
+    <thead>
+      <td>From Date</td>
+      <td>To Date</td>
+      <td>Category</td>
+      <td>Leave Type</td>
+      <td>Status</td>
+      <td width="25%">Actions</td>
+    </thead>
+    <tbody>
       <% current_user.attendances.each do |attendance| %>
-          <tr>
-            <td>
-              <%= date_format(attendance.start_date) %>
-            </td>
-            <td>
-              <%= date_format(attendance.end_date) %>
-            </td>
-            <td>
-              <%= attendance.is_leave_or_wfh ? "Leave" : "Work From Home" %>
-            </td>
-            <td>
-              <%= attendance.leave_type.name %>
-            </td>
-            <td>
-              <%= attendance_current_status(attendance) %>
-            </td>
-            <td>
-              <%= link_to("show", {:controller => 'attendances', :action => 'show', :id => attendance.id}, :class => "actions") %>
-              <% if (attendance_current_status(attendance).equal?(:pending)) %>
-                  <%= link_to("edit", edit_attendance_path(attendance.id), :class => "actions") %>
-                  <%= link_to("delete", {:controller => 'attendances', :action => 'destroy', :id => attendance.id}, :method => :delete, :class => "actions") %>
-              <% end %>
-              <% if (attendance_current_status(attendance).equal?(:rejected)) %>
-                  <%= link_to("resubmit", edit_attendance_path(id: attendance.id), :class => "actions") %>
-              <% end %>
+        <tr>
+          <td><%= date_format(attendance.start_date) %></td>
+          <td><%= date_format(attendance.end_date) %></td>
+          <td><%= attendance.is_leave_or_wfh ? "Leave" : "Work From Home" %></td>
+          <td><%= attendance.leave_type.name %></td>
+          <td><%= attendance_current_status(attendance) %></td>
+          <td>
+            <%= link_to("show", {:controller => 'attendances', :action => 'show', :id => attendance.id}, class: "button secondary tiny") %>
+            <% if (attendance_current_status(attendance).equal?(:pending)) %>
+                <%= link_to("edit", edit_attendance_path(attendance.id), class: "button secondary tiny") %>
+                <%= link_to("delete", {:controller => 'attendances', :action => 'destroy', :id => attendance.id}, :method => :delete, class: "button alert tiny") %>
+            <% end %>
+            <% if (attendance_current_status(attendance).equal?(:rejected)) %>
+                <%= link_to("resubmit", edit_attendance_path(id: attendance.id), class: "button secondary tiny") %>
+            <% end %>
 
-            </td>
-          </tr>
+          </td>
+        </tr>
       <% end %>
-    </table>
+    </tbody>
+  </table>
 
-    <p>
-      <b>Search My Leave Requests</b>
-      <%= image_tag "search_glass.png", :class => "tab_button", :name => "search_my_request" %>
-    </p>
+  <p>
+    <b>Search My Leave Requests</b>
+    <%= image_tag "search_glass.png", :class => "tab_button", :name => "search_my_request" %>
+  </p>
 <% else %>
-
-    <p>
-      <b>You don't have any Leave Requests</b>
-    </p>
+  <p>
+    <b>You don't have any Leave Requests</b>
+  </p>
 <% end %>
 
 <div class="content_section" id="search_my_request" style="display: none;">
@@ -86,6 +65,7 @@
   </div>
   <span id="search_results_count" style="display: block;"></span>
 </div>
+
 <script>
     $(document).ready(function () {
         attach_Click_event();
