@@ -43,6 +43,7 @@ class AttendancesController < ApplicationController
   # POST /attendances.json
   def create
     @attendance = Attendance.new(params[:attendance])
+    @attendance.emails_to_notify = @attendance.emails_to_notify.select{|email| !email.blank?}.join(",")
     @attendance.user = current_user
     @attendance.days = @attendance.days.abs
     @attendance.end_date= @attendance.start_date + @attendance.days.days - 1.days
@@ -98,5 +99,9 @@ class AttendancesController < ApplicationController
 
   def apply_leave
     @attendance = Attendance.new
+  end
+
+  def team_leaves
+    @manager = current_user
   end
 end

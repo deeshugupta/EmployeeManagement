@@ -24,7 +24,9 @@ class UsersController < ApplicationController
     else
       @user.roles << Role.find_by_name(:employee)
     end
-    redirect_to root_path if @user.save!
+    if @user.save!
+      UserMailer.user_registered_email(@user)
+      redirect_to root_path
   end
 
 

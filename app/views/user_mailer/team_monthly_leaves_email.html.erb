@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+<p>
+  Below are the details of leaves taken this month in your team:
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>
+        Name
+      </th>
+      <th>
+        Leaves
+      </th>
+      <th>
+        WFHs
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if !@manager.team_members.blank? %>
+      <% @manager.team_members.each do |team_member| %>
+        <tr>
+          <td>
+            <%= team_member.name %>
+          </td>
+          <td>
+            <%= team_member.leaves_for_month(@month, @year).count %>
+          </td>
+          <td>
+            <%= team_member.wfh_for_month(@month, @year).count %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+<br/>
+</body>
+</html>

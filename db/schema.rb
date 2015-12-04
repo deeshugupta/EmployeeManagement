@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151001155105) do
+ActiveRecord::Schema.define(:version => 20151203065411) do
 
   create_table "attendances", :force => true do |t|
     t.integer  "user_id"
@@ -21,10 +21,13 @@ ActiveRecord::Schema.define(:version => 20151001155105) do
     t.text     "reason"
     t.boolean  "approval_status"
     t.text     "comments"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
     t.date     "end_date"
     t.integer  "leave_type_id"
+    t.string   "emails_to_notify"
+    t.boolean  "is_escalated"
+    t.boolean  "auto_approved"
   end
 
   create_table "leave_types", :force => true do |t|

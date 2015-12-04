@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+<p>
+  <b><%= @attendance.is_leave_or_wfh ? "Leave" : "Work from home" %></b> Request by <b><%= @attendance.user.name %></b> has been approved from date
+  <b><%= date_format(@attendance.start_date) %></b> to <b><%=date_format(@attendance.start_date + @attendance.days.days)%></b>.
+  <br>
+</p>
+<p>
+ Reason : <%= @attendance.reason %>
+</p>
+<br/>
+</body>
+</html>

@@ -7,16 +7,18 @@
  *
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
+ *= require jquery.ui.all
  *= require jquery.sliderTabs
  *= require jquery.sliderTabs.min
 
  *= require_self
- //= require foundation_and_overrides
+ *= require foundation_and_overrides
 
- *= require_tree .
  *= require nprogress
  *= require nprogress-bootstrap
  *= foundation/components/tables
+ *= require select2
+ *= require_tree .
 */
 
 
@@ -60,4 +62,21 @@
 
 a.img_style:hover {
     background: transparent;
+}
+
+
+.select2-container *{
+    font-size: 0.875rem;
+}
+
+.select2-search__field{
+    padding-left: 0px !important;
+    margin: 0px !important;
+    min-width:30px !important;
+    box-shadow: none !important;
+}
+
+.select2-container .select2-selection--multiple
+{
+    min-height: 20px !important;
 }

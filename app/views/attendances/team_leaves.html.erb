@@ -1,0 +1,31 @@
+<table>
+  <thead>
+    <tr>
+      <th>
+        Name
+      </th>
+      <th>
+        Leaves
+      </th>
+      <th>
+        WFH
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if !@manager.team_members.blank? %>
+      <% @manager.team_members.each do |team_member| %>
+        <tr>
+          <td>
+            <%= team_member.name %>
+          </td>
+          <td>
+            <%= team_member.leaves_for_month(12, 2015) %>
+          </td>
+          <td>
+            <%= team_member.wfh_for_month(12, 2015) %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>

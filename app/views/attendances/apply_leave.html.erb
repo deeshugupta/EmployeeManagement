@@ -2,7 +2,7 @@
 
 <h1>Apply Leave</h1>
 
-<%= form_for :attendance, :url => {:action => :create} do |f| %>
+<%= form_for :attendance, :url => {:action => :create}, :html => {:id => 'new-leave-form'} do |f| %>
   <%= render :partial => 'attendances/form', :locals => {:f => f} %>
 <% end %>
 

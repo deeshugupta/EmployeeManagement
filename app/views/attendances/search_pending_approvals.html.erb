@@ -9,7 +9,8 @@
           <div class="row">
             <label> User:
               <% my_team = current_user.team_members.map{|v| v.name.capitalize}.sort %>
-              <%= select :name , nil, my_team%>
+              <%= text_field_tag(:name) %>
+
             </label>
           </div>
           <div class="row">

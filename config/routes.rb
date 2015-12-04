@@ -1,5 +1,11 @@
 EmployeeManagement::Application.routes.draw do
 
+  get "holidays/index"
+
+  get "holidays/new"
+
+  get "holidays/edit"
+
   devise_for :users, skip: :registrations
   devise_scope :user do
     resource :registration, only: [:edit, :update], path: 'users', controller: 'devise/registrations', as: :user_registration
@@ -14,6 +20,7 @@ EmployeeManagement::Application.routes.draw do
       get :pending_approvals
       get :search_pending_approvals
       get :available_leaves
+      get :team_leaves
     end
   end
   post "dashboard/search" => "dashboard#search", :as => :dashboard_search
@@ -21,12 +28,18 @@ EmployeeManagement::Application.routes.draw do
     collection do
       get :my_team
       get :approve
+      get :entire_team
     end
   end
 
   resources :users
 
+  resources :holidays
+
   match ':controller(/:action(:/id))'
+
+  get 'search/search_emails' => 'search#search_emails'
+  get 'search/search_name' => 'search#search_name'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

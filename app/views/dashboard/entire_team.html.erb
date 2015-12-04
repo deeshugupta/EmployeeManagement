@@ -1,0 +1,36 @@
+<table>
+  <thead>
+    <tr>
+      <th>
+        Name
+      </th>
+      <th>
+        Email
+      </th>
+      <th>
+        Manager
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @entire_team.each do |team_member| %>
+      <tr>
+        <td>
+          <%= team_member.name %>
+        </td>
+        <td>
+          <%= team_member.email %>
+        </td>
+        <td>
+          <% if team_member.manager_id.nil? %>
+            --
+          <% elsif team_member.manager == current_user %>
+            (You)
+          <% else %>
+            <%= team_member.manager.name %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

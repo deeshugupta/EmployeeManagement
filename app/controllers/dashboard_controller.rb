@@ -1,6 +1,7 @@
 class DashboardController < ApplicationController
 
   respond_to :html, :js
+  before_filter :check_manager, only: :entire_team
 
   def index
     @attendance = Attendance.new
@@ -30,6 +31,7 @@ class DashboardController < ApplicationController
                         params[:end]['end_date(3i)'].to_i)
 
     name = params[:name][0]
+    user_id = params[:user_id]
     pending = params[:pending]
     approved = params[:approved]
     rejected = params[:rejected]
@@ -40,9 +42,9 @@ class DashboardController < ApplicationController
     sick = params[:sick]
     privilege = params[:privilege]
 
-    if !name.blank?
+    if !user_id.blank?
       @user_attendances = Attendance.joins(:user, :leave_type).
-          where('users.name in (?) and users.manager_id = ?', name, current_user.id)
+          where('users.id=? and users.manager_id = ?', user_id, current_user.id)
     else
       @user_attendances = Attendance.joins(:user, :leave_type).
           where('users.manager_id = ?', current_user.id)
@@ -222,7 +224,16 @@ class DashboardController < ApplicationController
   end
 
   def my_team
+  end
 
+  def entire_team
+    @entire_team = current_user.entire_team
+  end
+
+  private
+
+  def check_manager
+    redirect_to root_path if !current_user.is_manager?
   end
 
 end

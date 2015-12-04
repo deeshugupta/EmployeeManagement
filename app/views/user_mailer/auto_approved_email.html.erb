@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+<p>
+  A Request for  <b><%= @attendance.is_leave_or_wfh ? "leave" : "work from home" %></b> has been submitted from date
+  <b><%= date_format(@attendance.start_date) %></b> to <b><%=date_format(@attendance.start_date + @attendance.days.days)%></b> and
+  has been submitted by <b><%=@attendance.user.name%></b> on <%= date_format(@attendance.created_at) %> but was not processed within <%= (@attendance.is_leave_or_wfh ? APP_CONFIG['leave_escalation_days'] : APP_CONFIG['wfh_escalation_days'])*2 %> days, so this approval is going to be <b>auto approved</b>
+  <br>
+</p>
+<p>
+ Reason : <%= @attendance.reason %>
+</p>
+<br/>
+See Pending Requests
+<%= link_to "here", pending_approvals_attendances_url %>
+
+</body>
+</html>

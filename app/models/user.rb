@@ -21,4 +21,122 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :roles
 
   accepts_nested_attributes_for :roles
+
+  def is_admin?
+    roles.where(name: 'admin').count != 0
+  end
+
+  def is_manager?
+    roles.where(name: 'Manager').count != 0
+  end
+
+  def is_dev?
+    roles.where(name: 'Developer').count != 0
+  end
+
+  def entire_team
+    all_team_members = []
+    if self.is_manager?
+      team_members.each do |t_member|
+        all_team_members << t_member
+        all_team_members << t_member.entire_team
+      end
+    end
+    all_team_members.flatten.uniq
+  end
+
+  def approved_leaves
+    self.attendances.where(:approval_status => true, :is_leave_or_wfh => true)
+  end
+
+  def rejected_leaves
+    self.attendances.where(:approval_status => false, :is_leave_or_wfh => true)
+  end
+
+  def approved_wfhs
+    self.attendances.where(:approval_status => true, :is_leave_or_wfh => false)
+  end
+
+  # from_date and to_date here will be just strings
+  def leaves_for_time_period(from_date, to_date)
+    leaves = self.approved_leaves.where("start_date > ? AND start_date <= ? AND end_date <= ?", from_date, to_date, to_date)
+    leave_dates = []
+    leaves.each do |leave|
+      leave_dates << leave.start_date.upto(leave.end_date).select {|dt| dt.strftime('%A') != 'Sunday' && (!leave_user.is_dev? || (leave.user.is_dev? && dt.strftime('%A') != 'Saturday'))}
+    end
+    leave_dates.flatten
+  end
+
+  def leaves_for_month(month, year)
+    month_start_day = APP_CONFIG['month_start_day']
+    month_end_day = APP_CONFIG['month_end_day']
+    if month == 1
+      start_date = "#{year-1}-12-#{month_start_day.to_s.rjust(2,'0')}"
+      end_date = "#{year}-01-#{month_end_day.to_s.rjust(2,'0')}"
+    else
+      start_date = "#{year}-#{(month-1).to_s.rjust(2,'0')}-#{month_start_day.to_s.rjust(2,'0')}"
+      end_date = "#{year}-#{month.to_s.rjust(2,'0')}-#{month_end_day.to_s.rjust(2,'0')}"
+    end
+    month_leaves= self.leaves_for_time_period(start_date, end_date)
+
+    # leaves that are started before starting of month and end after starting of month
+    e_leaves_1 = self.approved_leaves.where("start_date < ? AND end_date > ?", start_date, start_date)
+    e_leaves_2 = self.approved_leaves.where("start_date <= ? AND end_date > ?", end_date, end_date)
+    leaves_1 = []
+    e_leaves_1.each do |leave|
+      leaves_1 << Date.parse(start_date).upto(leave.end_date).select {|dt| dt.strftime('%A') != 'Sunday' && (!leave_user.is_dev? || (leave.user.is_dev? && dt.strftime('%A') != 'Saturday'))}
+    end
+
+    leaves_2 = []
+    e_leaves_2.each do |leave|
+      leaves_2 << leave.start_date.upto(Date.parse(end_date)).select {|dt| dt.strftime('%A') != 'Sunday' && (!leave_user.is_dev? || (leave.user.is_dev? && dt.strftime('%A') != 'Saturday'))}
+    end
+    total_leaves = month_leaves + leaves_1 + leaves_2
+    total_leaves.flatten
+  end
+
+  def wfh_for_time_period(from_date, to_date)
+    leaves = self.approved_wfhs.where("start_date > ? AND start_date <= ? AND end_date <= ?", from_date, to_date, to_date)
+    leave_dates = []
+    leaves.each do |leave|
+      leave_dates << leave.start_date.upto(leave.end_date).select {|dt| dt.strftime('%A') != 'Sunday' && (!leave_user.is_dev? || (leave.user.is_dev? && dt.strftime('%A') != 'Saturday'))}
+    end
+    leave_dates.flatten
+  end
+
+  def wfh_for_month(month, year)
+    month_start_day = APP_CONFIG['month_start_day']
+    month_end_day = APP_CONFIG['month_end_day']
+    if month == 1
+      start_date = "#{year-1}-12-#{month_start_day.to_s.rjust(2,'0')}"
+      end_date = "#{year}-01-#{month_end_day.to_s.rjust(2,'0')}"
+    else
+      start_date = "#{year}-#{(month-1).to_s.rjust(2,'0')}-#{month_start_day.to_s.rjust(2,'0')}"
+      end_date = "#{year}-#{month.to_s.rjust(2,'0')}-#{month_end_day.to_s.rjust(2,'0')}"
+    end
+    print start_date
+    print end_date
+    month_wfhs= self.wfh_for_time_period(start_date, end_date)
+
+    # wfhs that are started before starting of month and end after starting of month
+    e_wfhs_1 = self.approved_wfhs.where("start_date <= ? AND end_date > ?", start_date, start_date)
+    e_wfhs_2 = self.approved_wfhs.where("start_date <= ? AND end_date > ?", end_date, end_date)
+    wfhs_1 = []
+    e_wfhs_1.each do |wfh|
+      wfhs_1 << Date.parse(start_date).upto(wfh.end_date).select {|dt| dt.strftime('%A') != 'Sunday' && (!leave_user.is_dev? || (leave.user.is_dev? && dt.strftime('%A') != 'Saturday'))}
+    end
+
+    wfhs_2 = []
+    e_wfhs_2.each do |wfh|
+      wfhs_2 << wfh.start_date.upto(Date.parse(end_date)).select {|dt| dt.strftime('%A') != 'Sunday' && (!leave_user.is_dev? || (leave.user.is_dev? && dt.strftime('%A') != 'Saturday'))}
+    end
+    total_wfhs = month_wfhs + wfhs_1 + wfhs_2
+    total_wfhs.flatten
+  end
+
+  def self.send_monthly_team_leaves
+    Role.where(:name=>'Manager').first.users.each do |manager|
+      UserMailer.team_monthly_leaves_email(manager, Date.today.month, Date.today.year).deliver
+    end
+  end
 end

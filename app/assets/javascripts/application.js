@@ -12,12 +12,14 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.ui.all
 //= require jquery.sliderTabs
 //= require jquery.sliderTabs.min
 //= require helper
-//= require_tree .
 //= require foundation
 //= require nprogress
 //= require nprogress-turbolinks
+//= require select2
+//= require_tree .
 
 $(function(){ $(document).foundation();});

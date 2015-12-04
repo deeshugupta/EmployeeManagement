@@ -25,5 +25,5 @@ end
 
 if User.count == 0
   user = User.create email: 'admin@test.com', password: 'password', password_confirmation: 'password'
-  user.role << Role.first
+  user.roles << Role.first
 end
