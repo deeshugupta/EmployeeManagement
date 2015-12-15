@@ -1,6 +1,6 @@
 <%#= link_to 'Home', root_path %>
 <h2>All Users</h2>
-
+<%= will_paginate @users, renderer: FoundationPagination::Rails %>
 <table>
   <thead>
     <th width="15%">Name</th>
@@ -28,3 +28,4 @@
     <% end %>
   </tbody>
 </table>
+<%= will_paginate @users, renderer: FoundationPagination::Rails %>

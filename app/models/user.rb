@@ -22,6 +22,18 @@ class User < ActiveRecord::Base
 
   accepts_nested_attributes_for :roles
 
+  def self.managers
+    Role.where(name: "Manager").first.users
+  end
+
+  def self.developers
+    Role.where(name: "Developer").first.users
+  end
+
+  def self.admins
+    Role.where(name: "admin").first.users
+  end
+
   def is_admin?
     roles.where(name: 'admin').count != 0
   end
@@ -37,10 +49,12 @@ class User < ActiveRecord::Base
   def entire_team
     all_team_members = []
     if self.is_manager?
-      team_members.each do |t_member|
+      self.team_members.each do |t_member|
         all_team_members << t_member
         all_team_members << t_member.entire_team
       end
+    elsif self.is_admin?
+      all_team_members = User.where("id!=#{self.id}")
     end
     all_team_members.flatten.uniq
   end
@@ -62,7 +76,7 @@ class User < ActiveRecord::Base
     leaves = self.approved_leaves.where("start_date > ? AND start_date <= ? AND end_date <= ?", from_date, to_date, to_date)
     leave_dates = []
     leaves.each do |leave|
-      leave_dates << leave.start_date.upto(leave.end_date).select {|dt| dt.strftime('%A') != 'Sunday' && (!leave_user.is_dev? || (leave.user.is_dev? && dt.strftime('%A') != 'Saturday'))}
+      leave_dates << leave.start_date.upto(leave.end_date).select {|dt| !Attendance.is_uncountable_day?(self, dt)}
     end
     leave_dates.flatten
   end
@@ -84,12 +98,12 @@ class User < ActiveRecord::Base
     e_leaves_2 = self.approved_leaves.where("start_date <= ? AND end_date > ?", end_date, end_date)
     leaves_1 = []
     e_leaves_1.each do |leave|
-      leaves_1 << Date.parse(start_date).upto(leave.end_date).select {|dt| dt.strftime('%A') != 'Sunday' && (!leave_user.is_dev? || (leave.user.is_dev? && dt.strftime('%A') != 'Saturday'))}
+      leaves_1 << Date.parse(start_date).upto(leave.end_date).select {|dt| !Attendance.is_uncountable_day?(self, dt)}
     end
 
     leaves_2 = []
     e_leaves_2.each do |leave|
-      leaves_2 << leave.start_date.upto(Date.parse(end_date)).select {|dt| dt.strftime('%A') != 'Sunday' && (!leave_user.is_dev? || (leave.user.is_dev? && dt.strftime('%A') != 'Saturday'))}
+      leaves_2 << leave.start_date.upto(Date.parse(end_date)).select {|dt| !Attendance.is_uncountable_day?(self, dt)}
     end
     total_leaves = month_leaves + leaves_1 + leaves_2
     total_leaves.flatten
@@ -99,7 +113,7 @@ class User < ActiveRecord::Base
     leaves = self.approved_wfhs.where("start_date > ? AND start_date <= ? AND end_date <= ?", from_date, to_date, to_date)
     leave_dates = []
     leaves.each do |leave|
-      leave_dates << leave.start_date.upto(leave.end_date).select {|dt| dt.strftime('%A') != 'Sunday' && (!leave_user.is_dev? || (leave.user.is_dev? && dt.strftime('%A') != 'Saturday'))}
+      leave_dates << leave.start_date.upto(leave.end_date).select {|dt| !Attendance.is_uncountable_day?(self, dt)}
     end
     leave_dates.flatten
   end
@@ -123,12 +137,12 @@ class User < ActiveRecord::Base
     e_wfhs_2 = self.approved_wfhs.where("start_date <= ? AND end_date > ?", end_date, end_date)
     wfhs_1 = []
     e_wfhs_1.each do |wfh|
-      wfhs_1 << Date.parse(start_date).upto(wfh.end_date).select {|dt| dt.strftime('%A') != 'Sunday' && (!leave_user.is_dev? || (leave.user.is_dev? && dt.strftime('%A') != 'Saturday'))}
+      wfhs_1 << Date.parse(start_date).upto(wfh.end_date).select {|dt| !Attendance.is_uncountable_day?(self, dt)}
     end
 
     wfhs_2 = []
     e_wfhs_2.each do |wfh|
-      wfhs_2 << wfh.start_date.upto(Date.parse(end_date)).select {|dt| dt.strftime('%A') != 'Sunday' && (!leave_user.is_dev? || (leave.user.is_dev? && dt.strftime('%A') != 'Saturday'))}
+      wfhs_2 << wfh.start_date.upto(Date.parse(end_date)).select {|dt| !Attendance.is_uncountable_day?(self, dt)}
     end
     total_wfhs = month_wfhs + wfhs_1 + wfhs_2
     total_wfhs.flatten
@@ -139,4 +153,45 @@ class User < ActiveRecord::Base
       UserMailer.team_monthly_leaves_email(manager, Date.today.month, Date.today.year).deliver
     end
   end
+
+  def self.increment_leaves_count_for_all_employees
+    self.all.each do |user|
+      user.casual += 0.6
+      user.sick += 0.6
+      user.privilege += 1.5
+      user.save
+    end
+  end
+
+  def decrement_sick_leaves(count)
+    self.sick -= count
+    self.save
+  end
+
+  def decrement_casual_leave(count)
+    self.casual -= count
+    self.save
+  end
+
+  def decrement_privilege_leave(count)
+    self.privilege -= count
+    self.save
+  end
+
+  def increment_sick_leaves(count)
+    self.sick += count
+    self.save
+  end
+
+  def increment_casual_leave(count)
+    self.casual += count
+    self.save
+  end
+
+  def increment_privilege_leave(count)
+    self.privilege += count
+    self.save
+  end
+
+
 end

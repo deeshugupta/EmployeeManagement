@@ -1,4 +1,6 @@
 class HolidaysController < ApplicationController
+  before_filter :check_admin, except: :index
+
   def index
     @holidays = Holiday.all
   end
@@ -38,6 +40,15 @@ class HolidaysController < ApplicationController
   end
 
   def destroy
+    @holiday = Holiday.delete(params[:id])
+    redirect_to holidays_path, notice: 'holiday was successfully removed'
+  end
 
+  private
+
+  def check_admin
+    if !current_user.is_admin?
+      redirect_to root_url
+    end
   end
 end

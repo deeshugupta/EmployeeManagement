@@ -40,6 +40,7 @@ EmployeeManagement::Application.routes.draw do
 
   get 'search/search_emails' => 'search#search_emails'
   get 'search/search_name' => 'search#search_name'
+  get 'search/search_manager_name' => 'search#search_manager_name'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -20,6 +20,10 @@
 # Learn more: http://github.com/javan/whenever
 
 
-every '0 10 20 * *' do
+every '0 10 25 * *' do
   runner "User.send_monthly_team_leaves"
+end
+
+every '0 0 1 * *' do
+  runner "User.increment_leaves_count_for_all_employees"
 end

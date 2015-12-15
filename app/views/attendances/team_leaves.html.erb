@@ -20,10 +20,21 @@
             <%= team_member.name %>
           </td>
           <td>
-            <%= team_member.leaves_for_month(12, 2015) %>
+            <%= team_member.leaves_for_month(Date.today.month, Date.today.year) %>
           </td>
           <td>
-            <%= team_member.wfh_for_month(12, 2015) %>
+            <% month_leaves = team_member.leaves_for_month(Date.today.month, Date.today.year) %>
+            <% month_leaves.each do |leave| %>
+              <div><%= leave %></div>
+            <% end %>
+            <div><b>Total:</b> <%= month_leaves.count %></div>
+          </td>
+          <td>
+            <% month_wfhs =  team_member.wfh_for_month(Date.today.month, Date.today.year) %>
+            <% month_wfhs.each do |wfh| %>
+              <div><%= wfh %></div>
+            <% end %>
+            <div><b>Total:</b> <%= month_wfhs.count %></div>
           </td>
         </tr>
       <% end %>

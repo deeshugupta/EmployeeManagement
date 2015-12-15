@@ -46,7 +46,11 @@ class AttendancesController < ApplicationController
     @attendance.emails_to_notify = @attendance.emails_to_notify.select{|email| !email.blank?}.join(",")
     @attendance.user = current_user
     @attendance.days = @attendance.days.abs
-    @attendance.end_date= @attendance.start_date + @attendance.days.days - 1.days
+    if @attendance.days != 0.5
+      @attendance.end_date= @attendance.start_date + @attendance.days.days - 1.days
+    else
+      @attendance.end_date= @attendance.start_date + @attendance.days.days - @attendance.days.days
+    end
     if(@attendance.approval_status)
       redirect_to "/faultyaccess.html"
     end

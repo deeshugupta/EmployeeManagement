@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   def index
-    @users = User.order(:name)
+    @users = User.paginate(page: params[:page], per_page: 20).order(:name)
   end
 
   def show
@@ -27,6 +27,7 @@ class UsersController < ApplicationController
     if @user.save!
       UserMailer.user_registered_email(@user)
       redirect_to root_path
+    end
   end
 
 

@@ -24,6 +24,7 @@ gem 'jquery-rails'
 gem 'foundation-rails'
 gem 'select2-rails'
 gem 'jquery-ui-rails'
+gem 'will_paginate-foundation'
 # gem 'rails3-jquery-autocomplete'
 
 gem 'whenever', :require => false

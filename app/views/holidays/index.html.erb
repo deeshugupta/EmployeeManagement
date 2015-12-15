@@ -1,2 +1,30 @@
-<h1>Holidays#index</h1>
-<p>Find me in app/views/holidays/index.html.erb</p>
+<%#= back_to_home_button %>
+
+<h2>Roles</h2>
+
+<table>
+  <thead>
+    <th width="35%">Name</th>
+    <th width="20%">Date</th>
+    <th width="20%">Days</th>
+    <th width="25%">Actions</th>
+  </thead>
+  <tbody>
+    <% @holidays.each do |holiday| %>
+      <tr>
+        <td><%= holiday.name %></td>
+        <td><%= holiday.on_date %></td>
+        <td><%= holiday.days %></td>
+        <td>
+          <%= link_to 'Show', holiday, class: 'button tiny secondary' %>
+          <%= link_to 'Edit', edit_holiday_path(holiday), class: 'button tiny secondary' %>
+          <%= link_to 'Destroy', holiday, confirm: 'Are you sure?', remote: true, method: :delete , class: 'button tiny alert' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br />
+
+<%= link_to 'New Holiday', new_holiday_path, class: 'button small' %>

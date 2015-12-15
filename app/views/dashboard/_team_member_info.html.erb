@@ -1,22 +1,24 @@
+<%= will_paginate my_team, renderer: FoundationPagination::Rails %>
 <table width="100%">
   <thead>
     <th>Member Name</th>
+    <th>Email</th>
     <th>Leaves Taken</th>
     <th>Work From Home Taken</th>
-    <th>Total Leaves</th>
     <th>Leaves Remaining</th>
   </thead>
   <tbody>
-    <% current_user.team_members.order(:name).each do |member| %>
+    <% my_team.each do |member| %>
       <tr>
         <td><%=member.name%></td>
+        <td><%=member.email%></td>
         <% leaves = member.attendances.where(:is_leave_or_wfh => true).where(:approval_status => true).sum(:days) %>
         <td><%= leaves %></td>
         <td><%= member.attendances.where(:is_leave_or_wfh => false).where(:approval_status => true).sum(:days) %></td>
         <% leaves_applicable =  member.sick.to_f + member.casual.to_f + member.privilege.to_f %>
-        <td><%= leaves_applicable %></td>
-        <td><%= leaves_applicable.to_f - leaves.to_f %></td>
+        <td><%= leaves_applicable.round(2) %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
+<%= will_paginate my_team, renderer: FoundationPagination::Rails %>

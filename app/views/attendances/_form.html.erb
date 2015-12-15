@@ -20,7 +20,7 @@
     <div class="row collapse">
       <%= f.label :days %>
       <div class="small-12 columns">
-        <%= f.number_field :days, :step => 0.5, required: true %>
+        <%= f.number_field :days, :step => 0.5, min: 0.5, required: true %>
       </div>
     </div>
 

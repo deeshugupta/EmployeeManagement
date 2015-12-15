@@ -12,20 +12,19 @@ class Attendance < ActiveRecord::Base
   # t.boolean :is_leave_or_wfh
 
   before_update do
-  if self.changed?
-
-    if self.changed_attributes.has_key?('approval_status')
-      approval_status_changed =  self.changes[:approval_status]
-      if !approval_status_changed.at(1).nil?
-        UserMailer.changed_response(self.user, self).deliver
-        if approval_status_changed.at(1) == true
-          UserMailer.notify_approval_to_email_getters(self.user, self).deliver
+    if self.changed?
+      if self.changed_attributes.has_key?('approval_status')
+        approval_status_changed =  self.changes[:approval_status]
+        if !approval_status_changed.at(1).nil?
+          UserMailer.changed_response(self.user, self).deliver
+          if approval_status_changed.at(1) == true
+            UserMailer.notify_approval_to_email_getters(self.user, self).deliver
+          end
+        else
+          UserMailer.new_approval(self.manager, self).deliver
         end
-      else
-        UserMailer.new_approval(self.manager, self).deliver
       end
     end
-  end
   end
 
   before_create do
@@ -92,7 +91,46 @@ class Attendance < ActiveRecord::Base
     if !self.auto_approved
       UserMailer.auto_approved_email(self).deliver
       self.auto_approved = true
+      self.approval_status = true
       self.save
     end
+  end
+
+
+  def process(manager, approval_type, new_comments)
+    if (self.user.manager_id == manager.id) || (!self.user.manager.manager.nil? and self.user.manager.manager.id == manager.id)
+      a_type = nil
+      if (approval_type.eql? 'Comment')
+        a_type= nil
+      elsif approval_type.eql? 'Approve'
+        a_type = true
+        if self.leave_type.name == 'Casual'
+          self.user.decrement_casual_leave(self.days)
+        elsif self.leave_type.name == 'Sick'
+          self.user.decrement_sick_leave(self.days)
+        elsif self.leave_type.name == 'Privilege'
+          self.user.decrement_privilege_leave(self.days)
+        end
+      else
+        a_type = false
+      end
+      self.update_attributes(:comments => self.comments.to_s+":##:"+new_comments.to_s, :approval_status => a_type)
+    end
+  end
+
+  def remaining_type_leaves
+    if self.leave_type.name == 'Sick'
+      self.user.sick
+    elsif self.leave_type.name == 'Casual'
+      self.user.casual
+    elsif self.leave_type.name == 'Privilege'
+      self.user.privilege
+    end
+  end
+
+  # day here must be of a date class instance
+  def self.is_uncountable_day?(user, day)
+    return true if (day.sunday? || (user.is_dev? && day.saturday?) || Holiday.is_in_between_holiday?(day))
+    return false
   end
 end

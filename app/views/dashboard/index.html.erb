@@ -29,11 +29,15 @@
         <% if current_user.roles.include?(Role.find_by_name(:Admin)) %>
           <li>&nbsp;</li>
           <li><%= link_to "Create new user", new_user_path, :class => "button" %></li>
+          <li>&nbsp;</li>
+          <li><%= link_to "Holidays", holidays_path, :class => "button" %></li>
         <% end %>
 
         <% if current_user.roles.include?(Role.find_by_name(:Admin)) ||  current_user.roles.include?(Role.find_by_name(:manager)) %>
           <li>&nbsp;</li>
           <li><%= link_to "Search Leave Request", search_pending_approvals_attendances_path, :class => "button" %></li>
+          <li>&nbsp;</li>
+          <li><%= link_to "Entire Team", entire_team_dashboard_index_path, :class => "button" %></li>
         <%end%>
       </ul>
     </div>

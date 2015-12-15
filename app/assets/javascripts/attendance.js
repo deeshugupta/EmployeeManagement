@@ -20,20 +20,51 @@ $(document).on("ready", function(){
         this.value = ui.item ? ui.item.value : this.value;
         $(this).data("user_id", ui.item.id);
         console.log($(this).data("user_id"));
-        // log( ui.item ?
-        //   "Selected: " + ui.item.value + " aka " + ui.item.id :
-        //   "Nothing selected, input was " + this.value );
       }
     });
 
+    $("#manager_name").autocomplete({
+      source: "/search/search_manager_name",
+      minLength: 2,
+      select: function( event, ui ) {
+        this.value = ui.item ? ui.item.value : this.value;
+        $(this).data("manager_user_id", ui.item.id);
+      }
+    });
+
+    $("#manager_name").on("change", function(){
+      $("#name").val("").data("user_id",undefined);
+    });
+
+    $("#name").on("change", function(){
+      $("#manager_name").val("").data("manager_user_id",undefined);
+    });
+
     $("#search_form").on('ajax:beforeSend', function(e, xhr, settings){
-      console.log("i m here")
       if($("#name").val() != "" && $("#name").data("user_id") != undefined){
         settings.data += "&user_id=" + $("#name").data("user_id");
         console.log(settings);
       }
 
-    })
+      if($("#manager_name").val() != "" && $("#manager_name").data("manager_user_id") != undefined){
+        settings.data += "&manager_user_id=" + $("#manager_name").data("manager_user_id");
+        console.log(settings);
+      }
+
+    });
+
+    if($("#start_start_date_1i").length != 0){
+      for(i=1;i<=3;i++){
+        $("#start_start_date_" + i + "i option[value='']").prop("selected", true);
+      }
+    }
+
+    if($("#end_end_date_1i").length != 0){
+      for(i=1;i<=3;i++){
+        $("#end_end_date_" + i + "i option[value='']").prop("selected", true);
+      }
+    }
+
   }
 
 
@@ -72,6 +103,8 @@ $(document).on("ready", function(){
   });
 });
 
+
+
 $(document).on("change", "#start_start_date_1i, #start_start_date_2i, #start_start_date_3i, #end_end_date_1i, #end_end_date_2i, #end_end_date_3i", function(e){
   if(!check_date_range("start_start_date", "end_end_date")){
     if($(e.target).attr("id").indexOf("start_start_date") != -1){
@@ -96,7 +129,31 @@ function check_date_range(base_start_name, base_end_name){
   end_year = $("#" + base_end_name + "_1i").val()
   end_month = $("#" + base_end_name + "_2i").val()
   end_day = $("#" + base_end_name + "_3i").val()
-  start_date = Date.parse(start_year + "-" + start_month + "-" + start_day)
-  end_date = Date.parse(end_year + "-" + end_month + "-" + end_day)
+
+  // if user hasn't selected start date, then return true
+  if(start_year == "" && start_month == "" && start_day == ""){
+    return true
+  }
+
+  // if user hasn't selected end date, then return true
+  if(end_year == "" && end_month == "" && end_day == ""){
+    return true
+  }
+  start_date = Date.parse(start_year + "-" + pad(start_month, 2) + "-" + pad(start_day, 2))
+  end_date = Date.parse(end_year + "-" + pad(end_month, 2) + "-" + pad(end_day, 2))
   return ((end_date - start_date) >= 0)
 }
+
+$(document).on("click", ".reset_start_date", function(){
+  $("#start_start_date_1i option[value='']").prop("selected", true)
+  $("#start_start_date_2i option[value='']").prop("selected", true)
+  $("#start_start_date_3i option[value='']").prop("selected", true)
+});
+
+$(document).on("click", ".reset_end_date", function(){
+  $("#end_end_date_1i option[value='']").prop("selected", true)
+  $("#end_end_date_2i option[value='']").prop("selected", true)
+  $("#end_end_date_3i option[value='']").prop("selected", true)
+});
+
+

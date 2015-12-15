@@ -1,7 +1,7 @@
 class DashboardController < ApplicationController
 
   respond_to :html, :js
-  before_filter :check_manager, only: :entire_team
+  before_filter :check_manager_or_admin, only: :entire_team
 
   def index
     @attendance = Attendance.new
@@ -10,28 +10,24 @@ class DashboardController < ApplicationController
   def approve
     @attendance = Attendance.find(params[:approval_id])
     approval_type = params[:commit]
-    type = nil
-    if (approval_type.eql? 'Comment')
-      type= nil
-    elsif approval_type.eql? 'Approve'
-      type = true
-    else
-      type = false
-    end
-    @attendance.update_attributes(:comments => @attendance.comments.to_s+":##:"+params[:comments].to_s, :approval_status => type)
+    comments = params[:comments]
+    @attendance.process(current_user, approval_type, comments)
     redirect_to pending_approvals_attendances_url
   end
 
   def search
-    start_date = Date.new(params[:start]['start_date(1i)'].to_i,
-                          params[:start]['start_date(2i)'].to_i,
-                          params[:start]['start_date(3i)'].to_i)
-    end_date = Date.new(params[:end]['end_date(1i)'].to_i,
-                        params[:end]['end_date(2i)'].to_i,
-                        params[:end]['end_date(3i)'].to_i)
+    start_date = nil
+    end_date   = nil
+    if !params[:start]['start_date(1i)'].blank?
+      start_date = Date.new(params[:start]['start_date(1i)'].to_i, params[:start]['start_date(2i)'].to_i, params[:start]['start_date(3i)'].to_i)
+    end
+    if !params[:end]['end_date(1i)'].blank?
+      end_date = Date.new(params[:end]['end_date(1i)'].to_i, params[:end]['end_date(2i)'].to_i, params[:end]['end_date(3i)'].to_i)
+    end
 
     name = params[:name][0]
     user_id = params[:user_id]
+    manager_user_id = params[:manager_user_id]
     pending = params[:pending]
     approved = params[:approved]
     rejected = params[:rejected]
@@ -45,6 +41,9 @@ class DashboardController < ApplicationController
     if !user_id.blank?
       @user_attendances = Attendance.joins(:user, :leave_type).
           where('users.id=? and users.manager_id = ?', user_id, current_user.id)
+    elsif !manager_user_id.blank?
+      @user_attendances = Attendance.joins(:user, :leave_type).
+          where('users.manager_id = ?', manager_user_id)
     else
       @user_attendances = Attendance.joins(:user, :leave_type).
           where('users.manager_id = ?', current_user.id)
@@ -56,14 +55,14 @@ class DashboardController < ApplicationController
     if (!end_date.nil?)
       @user_attendances = @user_attendances.where('end_date <= ?', end_date)
     end
-    if (!pending.nil?)
+    if !pending.nil?
       approval_status_where = approval_status_where + 'approval_status is NULL'
     end
     if !approved.nil?
       if !approval_status_where.empty?
         approval_status_where = approval_status_where + ' OR approval_status = true'
       else
-        approval_status_where = approval_status_where + 'approval_status = true'
+        approval_status_where = 'approval_status = true'
       end
     end
     if !rejected.nil?
@@ -150,8 +149,6 @@ class DashboardController < ApplicationController
                        name,'privilege',start_date, end_date).sum('attendances.days')
     @name = name
 
-
-
   end
 
   def search_my_requests
@@ -224,16 +221,17 @@ class DashboardController < ApplicationController
   end
 
   def my_team
+    @my_team = current_user.team_members.paginate(page: params[:page], per_page: 20).order(:name)
   end
 
   def entire_team
-    @entire_team = current_user.entire_team
+    @entire_team = current_user.entire_team.paginate(:page => params[:page], :per_page => 20)
   end
 
   private
 
-  def check_manager
-    redirect_to root_path if !current_user.is_manager?
+  def check_manager_or_admin
+    redirect_to root_path if (!current_user.is_manager? && !current_user.is_admin?)
   end
 
 end

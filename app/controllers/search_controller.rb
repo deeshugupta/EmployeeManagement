@@ -18,4 +18,14 @@ class SearchController < ApplicationController
     }
     end
   end
+
+  def search_manager_name
+    term = params["term"]
+    respond_to do |format|
+      users = User.managers.select("users.id, users.name as label, users.name as value").where("users.name LIKE '%#{term}%'")
+      format.json{
+      render :json => users.to_json
+    }
+    end
+  end
 end

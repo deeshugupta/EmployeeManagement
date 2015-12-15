@@ -8,11 +8,16 @@
         <div class="large-4 columns">
           <div class="row">
             <label> User:
-              <% my_team = current_user.team_members.map{|v| v.name.capitalize}.sort %>
               <%= text_field_tag(:name) %>
-
             </label>
           </div>
+          <% if current_user.is_admin? %>
+            <div class="row">
+              <label> Manager
+              <%= text_field_tag(:manager_name) %>
+              </label>
+            </div>
+          <% end %>
           <div class="row">
             <label> Status</label>
             <%= check_box_tag :pending %><%= label_tag "pending " %>
@@ -34,13 +39,15 @@
 
         <div class="large-4 columns">
           <label> Start Date:
-            <%= date_select(:start, :start_date) %>
+            <a class="button tiny tiny_01 reset_start_date">Reset</a>
+            <%= date_select(:start, :start_date , {:include_blank => true, :default => nil}) %>
           </label>
         </div>
 
         <div class="large-4 columns">
           <label> End Date:
-            <%= date_select(:end, :end_date) %>
+            <a class="button tiny tiny_01 reset_end_date">Reset</a>
+            <%= date_select(:end, :end_date, {:include_blank => true, :default => nil}) %>
           </label>
         </div>
       </div>

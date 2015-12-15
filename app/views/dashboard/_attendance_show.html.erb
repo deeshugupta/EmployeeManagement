@@ -6,6 +6,7 @@
     <th>Category</th>
     <th>Leave Type</th>
     <th>Days</th>
+    <th>Remaining Leaves</th>
     <th>Reason</th>
     <th>Status</th>
     <th colspan="2" width="37%">Actions</th>
@@ -17,8 +18,13 @@
         <td><%= date_format(approval.start_date) %></td>
         <td><%= date_format(approval.end_date) %></td>
         <td><%= approval.is_leave_or_wfh ? 'Leave' : 'Work From Home' %></td>
-        <td><%= approval.leave_type.name %></td>
+        <td>
+          <%= approval.leave_type.name %>
+        </td>
         <td><%= approval.days %></td>
+        <td>
+          <%= approval.remaining_type_leaves %>
+        </td>
         <td><%= approval.reason %></td>
         <td><%= attendance_current_status(approval) %></td>
         <td>

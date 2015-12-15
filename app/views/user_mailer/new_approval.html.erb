@@ -9,6 +9,7 @@
   <b><%= date_format(@attendance.start_date) %></b> to <b><%=date_format(@attendance.start_date + @attendance.days.days)%></b>
   has been submitted by <b><%=@attendance.user.name%></b>.
   <br>
+  <b>Remaining <%= @attendance.leave_type.name %> Leaves</b> for this employee : <b><%= @attendance.remaining_type_leaves %></b>
 </p>
 <p>
  Reason : <%= @attendance.reason %>

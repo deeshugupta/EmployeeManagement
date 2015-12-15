@@ -1,14 +1,21 @@
-<table>
+<%= will_paginate @entire_team, renderer: FoundationPagination::Rails %>
+<table width="100%">
   <thead>
     <tr>
-      <th>
-        Name
+      <th width="20%">Name</th>
+        Member Name
       </th>
       <th>
         Email
       </th>
       <th>
         Manager
+      </th>
+      <th>
+        Leaves Taken
+      </th>
+      <th>
+        Work From Home Taken
       </th>
     </tr>
   </thead>
@@ -30,7 +37,22 @@
             <%= team_member.manager.name %>
           <% end %>
         </td>
+        <td>
+          <% month_leaves = team_member.leaves_for_month(Date.today.month, Date.today.year) %>
+          <% month_leaves.each do |leave| %>
+            <div><%= leave %></div>
+          <% end %>
+          <div><b>Total:</b> <%= month_leaves.count %></div>
+        </td>
+        <td>
+          <% month_wfhs =  team_member.wfh_for_month(Date.today.month, Date.today.year) %>
+          <% month_wfhs.each do |wfh| %>
+            <div><%= wfh %></div>
+          <% end %>
+          <div><b>Total:</b> <%= month_wfhs.count %></div>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
+<%= will_paginate @entire_team, renderer: FoundationPagination::Rails %>
