@@ -36,6 +36,16 @@ class Attendance < ActiveRecord::Base
     UserMailer.delete_request(self.manager, self).deliver
   end
 
+  def processed_by_user
+    if !self.processed_by.nil?
+      return User.find(processed_by).email
+    elsif self.approval_status == true
+      return "Auto approved"
+    else
+      return "Approval awaiting"
+    end
+  end
+
   def email_notification_getters
     email_getters = []
     if !emails_to_notify.blank?
@@ -98,7 +108,7 @@ class Attendance < ActiveRecord::Base
 
 
   def process(manager, approval_type, new_comments)
-    if (self.user.manager_id == manager.id) || (!self.user.manager.manager.nil? and self.user.manager.manager.id == manager.id)
+    if (self.user.manager_id == manager.id) || (!self.user.manager.manager.nil? and self.user.manager.manager.id == manager.id) || manager.is_admin?
       a_type = nil
       if (approval_type.eql? 'Comment')
         a_type= nil
@@ -114,7 +124,18 @@ class Attendance < ActiveRecord::Base
       else
         a_type = false
       end
-      self.update_attributes(:comments => self.comments.to_s+":##:"+new_comments.to_s, :approval_status => a_type)
+      self.update_attributes(:comments => self.comments.to_s+":##:"+new_comments.to_s, :approval_status => a_type, :processed_by => manager.id)
+    end
+  end
+
+  # this method is called by cron job to escalate or auto approve the pending approvals if approval escalation is needed or auto approval is needed
+  def self.auto_process()
+    self.where("approval_status IS NULL").each do |leave|
+      if leave.approval_escalation_needed
+        leave.escalate_approval
+      elsif leave.auto_approval_needed
+        leave.auto_approve
+      end
     end
   end
 

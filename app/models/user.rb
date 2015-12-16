@@ -16,11 +16,19 @@ class User < ActiveRecord::Base
   has_many :team_members, :class_name => "User", :foreign_key => :manager_id
   belongs_to :manager, :class_name => "User"
 
-  has_many :approvals, :through => :team_members, :source => :attendances
+  # has_many :approvals, :through => :team_members, :source => :attendances
 
   has_and_belongs_to_many :roles
 
   accepts_nested_attributes_for :roles
+
+  def approvals
+    if self.is_admin?
+      Attendance.where("user_id IN (?)",self.entire_team.collect(&:id))
+    else self.is_manager?
+      Attendance.where("user_id IN (?)",self.team_members.collect(&:id))
+    end
+  end
 
   def self.managers
     Role.where(name: "Manager").first.users

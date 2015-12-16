@@ -27,3 +27,7 @@ end
 every '0 0 1 * *' do
   runner "User.increment_leaves_count_for_all_employees"
 end
+
+every '0 0 * * *' do
+  runner "Attendance.auto_process"
+end

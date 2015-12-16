@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151203132604) do
+ActiveRecord::Schema.define(:version => 20151216051746) do
 
   create_table "attendances", :force => true do |t|
     t.integer  "user_id"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(:version => 20151203132604) do
     t.string   "emails_to_notify"
     t.boolean  "is_escalated"
     t.boolean  "auto_approved"
+    t.integer  "processed_by"
   end
 
   create_table "holidays", :force => true do |t|

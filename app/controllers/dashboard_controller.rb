@@ -45,8 +45,12 @@ class DashboardController < ApplicationController
       @user_attendances = Attendance.joins(:user, :leave_type).
           where('users.manager_id = ?', manager_user_id)
     else
-      @user_attendances = Attendance.joins(:user, :leave_type).
+      if current_user.is_manager? || current_user.is_admin?
+        @user_attendances = Attendance.where("user_id IN (?)", current_user.entire_team.collect(&:id))
+      else
+        @user_attendances = Attendance.joins(:user, :leave_type).
           where('users.manager_id = ?', current_user.id)
+      end
     end
     if !start_date.nil?
       @user_attendances = @user_attendances.where('start_date >= ?', start_date)
