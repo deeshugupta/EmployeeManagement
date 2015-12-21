@@ -19,21 +19,21 @@
         <li>&nbsp;</li>
         <li><%= link_to "Submit New Request", apply_leave_attendances_path, :class => "button" %></li>
 
-        <% if current_user.roles.include?(Role.find_by_name(:manager)) %>
+        <% if current_user.is_manager? || current_user.is_admin? %>
           <li>&nbsp;</li>
           <li><%= link_to "Pending Approvals", pending_approvals_attendances_path, :class => "button" %></li>
           <li>&nbsp;</li>
           <li><%= link_to "My Team Members", my_team_dashboard_index_path, :class => "button" %></li>
         <% end %>
 
-        <% if current_user.roles.include?(Role.find_by_name(:Admin)) %>
+        <% if current_user.is_admin? %>
           <li>&nbsp;</li>
           <li><%= link_to "Create new user", new_user_path, :class => "button" %></li>
           <li>&nbsp;</li>
           <li><%= link_to "Holidays", holidays_path, :class => "button" %></li>
         <% end %>
 
-        <% if current_user.roles.include?(Role.find_by_name(:Admin)) ||  current_user.roles.include?(Role.find_by_name(:manager)) %>
+        <% if current_user.is_admin? ||  current_user.is_manager? %>
           <li>&nbsp;</li>
           <li><%= link_to "Search Leave Request", search_pending_approvals_attendances_path, :class => "button" %></li>
           <li>&nbsp;</li>

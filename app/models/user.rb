@@ -56,13 +56,13 @@ class User < ActiveRecord::Base
 
   def entire_team
     all_team_members = []
-    if self.is_manager?
+    if self.is_admin?
+      all_team_members = User.where("id!=#{self.id}")
+    elsif self.is_manager?
       self.team_members.each do |t_member|
         all_team_members << t_member
         all_team_members << t_member.entire_team
       end
-    elsif self.is_admin?
-      all_team_members = User.where("id!=#{self.id}")
     end
     all_team_members.flatten.uniq
   end

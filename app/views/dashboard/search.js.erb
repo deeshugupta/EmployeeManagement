@@ -7,6 +7,7 @@ $(document).ready(function() {
     <% name = @user_attendances.first.user.name%>
    $('#search_results_count').html("<b><%= @user_attendances.count%> results found</b>")
    $('#search_results').html("<%= escape_javascript(render(:partial => 'search_show', :locals=>{:attendances => @user_attendances, :wfh => @work_from_home, :leaves_total => @total_leaves})) %>");
+   $('#search_results').html("<%= escape_javascript(render(partial: 'dashboard/attendance_show', locals: {attendances: @user_attendances}))%>")
     <%else%>
     $('#search_results').html("No Results Found.");
     <%end%>

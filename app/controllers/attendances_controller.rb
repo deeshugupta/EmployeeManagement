@@ -108,4 +108,8 @@ class AttendancesController < ApplicationController
   def team_leaves
     @manager = current_user
   end
+
+  def pending_approvals
+    @attendances = current_user.approvals.where(approval_status: nil).paginate(per_page: 10, page: params[:page])
+  end
 end

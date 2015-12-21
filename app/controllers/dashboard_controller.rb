@@ -46,9 +46,9 @@ class DashboardController < ApplicationController
           where('users.manager_id = ?', manager_user_id)
     else
       if current_user.is_manager? || current_user.is_admin?
-        @user_attendances = Attendance.where("user_id IN (?)", current_user.entire_team.collect(&:id))
+        @user_attendances = Attendance.joins(:user, :leave_type).where("user_id IN (?)", current_user.entire_team.collect(&:id))
       else
-        @user_attendances = Attendance.joins(:user, :leave_type).
+        @user_attendances = Attendance.joins(:user, :leave_type).joins(:user, :leave_type).
           where('users.manager_id = ?', current_user.id)
       end
     end
@@ -124,6 +124,8 @@ class DashboardController < ApplicationController
     if (!leave_type_where.empty?)
       @user_attendances = @user_attendances.where(leave_type_where)
     end
+
+    @user_attendances = @user_attendances.paginate(per_page: 10, page: params[:page])
 
     @sick = Attendance.joins(:user,:leave_type)
                       .where("users.name like ?

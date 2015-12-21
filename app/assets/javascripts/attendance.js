@@ -104,6 +104,19 @@ $(document).on("ready", function(){
 });
 
 
+// for pagination while searching for attendances, used on url: /attendances/search_pending_approvals
+$(document).on("click", ".pagination li a", function(e){
+  e.preventDefault();
+  var $this = $(this);
+  var $form = $("#search_form");
+  $.ajax({
+    url: $this.attr("href"),
+    type: "post",
+    data: $form.serialize()
+  })
+})
+
+
 
 $(document).on("change", "#start_start_date_1i, #start_start_date_2i, #start_start_date_3i, #end_end_date_1i, #end_end_date_2i, #end_end_date_3i", function(e){
   if(!check_date_range("start_start_date", "end_end_date")){
