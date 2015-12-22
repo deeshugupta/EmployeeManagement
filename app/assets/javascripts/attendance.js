@@ -105,7 +105,7 @@ $(document).on("ready", function(){
 
 
 // for pagination while searching for attendances, used on url: /attendances/search_pending_approvals
-$(document).on("click", ".pagination li a", function(e){
+$(document).on("click", "#search_results .pagination li a", function(e){
   e.preventDefault();
   var $this = $(this);
   var $form = $("#search_form");
