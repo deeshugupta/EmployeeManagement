@@ -36,7 +36,7 @@ class UserMailer < ActionMailer::Base
     @year = year
     @month_start = "#{year}-#{month-1}-25"
     @month_end = "#{year}-#{month}-25"
-    mail(:to => manager.email, :subject => "Team Monthly Leave Information")
+    mail(:to => manager.email, :cc => Role.admin.users.collect(&:email).to_a, :subject => "Team Monthly Leave Information")
   end
 
   def escalate_approval_email(attendance)
