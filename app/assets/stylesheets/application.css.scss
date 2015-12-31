@@ -48,9 +48,9 @@
     margin-top: 5px;
 }
 
-.approval_comments{
+/*.approval_comments{
     display: none;
-}
+}*/
 
 .top_links{
   text-align: center;
@@ -85,4 +85,8 @@ a.img_style:hover {
 {
     padding: 2px 5px !important;
     margin-bottom: 2px;
+}
+
+#notification_recipient_modal .select2{
+    width: 60% !important;
 }

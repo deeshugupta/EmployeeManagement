@@ -9,8 +9,12 @@ class DashboardController < ApplicationController
 
   def approve
     @attendance = Attendance.find(params[:approval_id])
-    approval_type = params[:commit]
+    approval_type = params[:commit_action]
     comments = params[:comments]
+    if params[:emails_to_notify]
+      @attendance.emails_to_notify = params[:emails_to_notify]
+      @attendance.save()
+    end
     @attendance.process(current_user, approval_type, comments)
     redirect_to pending_approvals_attendances_url
   end

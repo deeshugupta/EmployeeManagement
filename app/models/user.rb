@@ -171,7 +171,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def decrement_sick_leaves(count)
+  def decrement_sick_leave(count)
     self.sick -= count
     self.save
   end
@@ -186,7 +186,7 @@ class User < ActiveRecord::Base
     self.save
   end
 
-  def increment_sick_leaves(count)
+  def increment_sick_leave(count)
     self.sick += count
     self.save
   end

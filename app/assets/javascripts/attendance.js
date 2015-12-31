@@ -6,9 +6,14 @@ function formatRepoSelection (repo, k) {
   return repo.email || repo.text
 }
 
-$(document).on("submit", "#new-leave-form", function(e){
+$(document).on("submit", "#new-leave-form, .new_attendance, .edit_attendance", function(e){
+  e.preventDefault();
+  if(($("#attendance_emails_to_notify").val() == null) || ($("#attendance_emails_to_notify").val() == undefined)){
+    if(confirm('Do you want to proceed without adding any recepients for your leave approval email')){
+      $(this)[0].submit();
+    }
+  }
   // e.preventDefault();
-  console.log($("#attendance_emails_to_notify").select2("val"))
 });
 
 $(document).on("ready", function(){
@@ -83,7 +88,6 @@ $(document).on("ready", function(){
         $.each(items, function(i){
           items[i].id = this.email
         });
-        console.log(items)
         return {
           results: items
         };
@@ -95,12 +99,14 @@ $(document).on("ready", function(){
     templateResult: formatRepo,
     templateSelection: formatRepoSelection
   });
-  // $(".select2-selection__choice").each(function(){
-  //   $(this).append($(this).attr("title"));
-  // });
-  $(".select2-selection__choice__remove").on("click", function(){
 
-  });
+  if($('#notification_recipient_modal').length == 1){
+    $('#notification_recipient_modal').foundation({
+      reveal: {
+        close_on_background_click: false
+      }
+    });
+  }
 });
 
 
@@ -169,4 +175,44 @@ $(document).on("click", ".reset_end_date", function(){
   $("#end_end_date_3i option[value='']").prop("selected", true)
 });
 
+$(document).on("click", "input[name='commit']", function(e){
+  $(this).closest("form").data("btn", $(this).data("btn"));
+})
+
+$(document).on("submit", ".approval_comments", function(e){
+  var $form = $(this);
+  var btn_action = $form.data("btn");
+  e.preventDefault();
+  $("input[name='commit_action']").val(btn_action);
+  if((btn_action == "approve") && ($form.data("needtoaddnotifiers") == true)){
+    $("#attendance_emails_to_notify").data("approval_id", $form.data("approvalid"));
+    $('#notification_recipient_modal').foundation('reveal', 'open')
+  }
+  else{
+    $form[0].submit();
+  }
+});
+
+$(document).on("click", "#modal-approve-leave", function(){
+  approval_id = $("#attendance_emails_to_notify").data("approval_id");
+  $("#emails_to_notify").remove();
+  $("#attendance_emails_to_notify").clone().attr("id", "emails_to_notify").attr("name", "emails_to_notify[]").css('display', 'none').appendTo("form[data-approvalid='" + approval_id + "']");
+  $("#emails_to_notify").find("option").prop("selected", true);
+  $('#notification_recipient_modal').foundation('reveal', 'close');
+  $(".approval_comments")[0].submit();
+});
+
+$(document).on("change", "#attendance_emails_to_notify", function(){
+  if($(this).val() != null){
+    $("#modal-approve-leave").html("Approve");
+  }
+  else{
+    $("#modal-approve-leave").html("Approve without adding Recipients");
+  }
+});
+
+function reset_emails_to_notify_form(){
+  $("#attendance_emails_to_notify option").remove();
+  $(".approval_comments").data("approval_id",null);
+}
 
