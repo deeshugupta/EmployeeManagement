@@ -43,7 +43,6 @@ class AttendancesController < ApplicationController
   # POST /attendances.json
   def create
     @attendance = Attendance.new(params[:attendance])
-    @attendance.emails_to_notify = @attendance.emails_to_notify.select{|email| !email.blank?}.join(",")
     @attendance.user = current_user
     @attendance.days = @attendance.days.abs
     if @attendance.days != 0.5
@@ -77,7 +76,7 @@ class AttendancesController < ApplicationController
     if(@attendance.approval_status)
       redirect_to "/faultyaccess.html"
     end
-
+    
     respond_to do |format|
       if @attendance.update_attributes(params[:attendance])
         format.html { redirect_to :controller=> 'dashboard', notice: 'Attendance was successfully updated.' }

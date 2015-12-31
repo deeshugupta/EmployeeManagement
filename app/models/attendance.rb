@@ -18,12 +18,23 @@ class Attendance < ActiveRecord::Base
         if !approval_status_changed.at(1).nil?
           UserMailer.changed_response(self.user, self).deliver
           if approval_status_changed.at(1) == true
-            UserMailer.notify_approval_to_email_getters(self.user, self).deliver
+            if !self.email_notification_getters.blank?
+              UserMailer.notify_approval_to_email_getters(self.user, self).deliver
+            end
           end
         else
           UserMailer.new_approval(self.manager, self).deliver
         end
       end
+    end
+  end
+
+  before_save do
+    if self.emails_to_notify.is_a?(Array)
+      self.emails_to_notify.delete("---\n- ''\n")
+      self.emails_to_notify.delete("")
+      self.emails_to_notify.delete(nil)
+      self.emails_to_notify = self.emails_to_notify.select{|email| !email.blank?}.join(",")
     end
   end
 
@@ -110,9 +121,9 @@ class Attendance < ActiveRecord::Base
   def process(manager, approval_type, new_comments)
     if (self.user.manager_id == manager.id) || (!self.user.manager.manager.nil? and self.user.manager.manager.id == manager.id) || manager.is_admin?
       a_type = nil
-      if (approval_type.eql? 'Comment')
+      if (approval_type.eql? 'comment')
         a_type= nil
-      elsif approval_type.eql? 'Approve'
+      elsif approval_type.eql? 'approve'
         a_type = true
         if self.leave_type.name == 'Casual'
           self.user.decrement_casual_leave(self.days)

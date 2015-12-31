@@ -32,17 +32,18 @@
           <%= link_to('show', {controller: 'attendances', action: 'show', id: approval.id}, class: "button secondary tiny")%>
         </td>
         <td id="approval<%= approval.id%>">
-          <%= form_tag approve_dashboard_index_path , :html=>{:class => "approval_comments"} do %>
+          <%= form_tag approve_dashboard_index_path , :class => "approval_comments", :data => {:approvalid => approval.id, :needtoaddnotifiers=>approval.email_notification_getters.blank?} do %>
               <div class="field">
                 <%= text_area_tag :comments, "", :placeholder => "Comments",:cols=>25, :rows=>5, :style => "resize: none;" %>
               </div>
               <%= hidden_field_tag("approval_id",approval.id) %>
 
               <ul class="button-group">
-                <li><%= submit_tag 'Approve', class: 'button tiny', data: {confirm: 'Are you sure you wanna approve this!'} %></li>
-                <li><%= submit_tag 'Reject', class: 'button tiny', data: {confirm: 'Are you sure you wanna reject this!'} %></li>
-                <li><%= submit_tag 'Comment', class: 'button tiny' %></li>
+                <li><%= submit_tag 'Approve', class: 'button tiny', data: {confirm: 'Are you sure you wanna approve this!', btn: 'approve'} %></li>
+                <li><%= submit_tag 'Reject', class: 'button tiny', data: {confirm: 'Are you sure you wanna reject this!', btn: 'reject'} %></li>
+                <li><%= submit_tag 'Comment', class: 'button tiny', data: {btn: 'comment'} %></li>
               </ul>
+              <input type="hidden" name="commit_action" value=""/>
           <% end %>
 
         </td>
@@ -51,3 +52,13 @@
   </tbody>
 </table>
 <%= will_paginate attendances, renderer: FoundationPagination::Rails %>
+
+<div id="notification_recipient_modal" class="reveal-modal" data-reveal aria-labelledby="modalTitle">
+  <h5 id="modalTitle">Add Recipients for notification of this leaves/wfhs approval</h5>
+  <p>
+    <%= select_tag :attendance_emails_to_notify, {}, {:multiple => true} %>
+  </p>
+  <p>
+    <a href="javascript: void(0);" id="modal-approve-leave" class="button">Approve without adding Recipients</a>
+  </p>
+</div>
