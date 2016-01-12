@@ -13,6 +13,9 @@ $(document).on("submit", "#new-leave-form, .new_attendance, .edit_attendance", f
       $(this)[0].submit();
     }
   }
+  else{
+    $(this)[0].submit();
+  }
   // e.preventDefault();
 });
 
