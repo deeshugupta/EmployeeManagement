@@ -13,6 +13,7 @@ class Attendance < ActiveRecord::Base
 
   before_update do
     if self.changed?
+      self.fix_emails_to_notify
       if self.changed_attributes.has_key?('approval_status')
         approval_status_changed =  self.changes[:approval_status]
         if !approval_status_changed.at(1).nil?
@@ -30,12 +31,7 @@ class Attendance < ActiveRecord::Base
   end
 
   before_save do
-    if self.emails_to_notify.is_a?(Array)
-      self.emails_to_notify.delete("---\n- ''\n")
-      self.emails_to_notify.delete("")
-      self.emails_to_notify.delete(nil)
-      self.emails_to_notify = self.emails_to_notify.select{|email| !email.blank?}.join(",")
-    end
+    self.fix_emails_to_notify
   end
 
   before_create do
@@ -45,6 +41,14 @@ class Attendance < ActiveRecord::Base
 
   before_destroy do
     UserMailer.delete_request(self.manager, self).deliver
+  end
+
+
+  def fix_emails_to_notify
+    if self.emails_to_notify.is_a?(Array)
+      self.emails_to_notify = self.emails_to_notify.reject{|email| (email.blank? || (email.index("---") != nil) || (email.index("\n") != nil))}
+      self.emails_to_notify = self.emails_to_notify.join(",")
+    end
   end
 
   def processed_by_user
