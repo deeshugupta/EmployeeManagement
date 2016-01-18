@@ -46,9 +46,14 @@ class Attendance < ActiveRecord::Base
 
   def fix_emails_to_notify
     if self.emails_to_notify.is_a?(Array)
-      self.emails_to_notify = self.emails_to_notify.reject{|email| (email.blank? || (email.index("---") != nil) || (email.index("\n") != nil))}
-      self.emails_to_notify = self.emails_to_notify.join(",")
+      e_to_notify = self.emails_to_notify
+      e_to_notify.map{|email| email.scan(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i).map{|e| e[0..-1]}}.flatten
+      self.emails_to_notify = e_to_notify.join(",")
+    elsif !self.emails_to_notify.blank?
+      e_to_notify = self.emails_to_notify.scan(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i).map{|e| e[0..-1]}
+      self.emails_to_notify = e_to_notify.join(",")
     end
+    
   end
 
   def processed_by_user
@@ -63,18 +68,14 @@ class Attendance < ActiveRecord::Base
 
   def email_notification_getters
     email_getters = []
-    if !emails_to_notify.blank?
-      emails = emails_to_notify.split(',')
-      if !emails.blank?
-        emails.each do |email|
-          email_getters << email
-        end
-      end
+    if !self.emails_to_notify.blank?
+      email_getters = self.emails_to_notify.scan(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i).map{|e| e[0..-1]}
     end
     return email_getters
   end
 
-  def approval_escalation_needed
+  def approval_escalation_needed?
+    return false if !self.approval_status.nil?
     if self.is_leave_or_wfh && !self.is_escalated
       return (Date.today.beginning_of_day - self.created_at)/(60*60) > APP_CONFIG['leave_escalation_days'] * 24
     elsif !self.is_leave_or_wfh && !self.is_escalated
@@ -82,7 +83,7 @@ class Attendance < ActiveRecord::Base
     end
   end
 
-  # call this method only if approval_escalation_needed returns true
+  # call this method only if approval_escalation_needed? returns true
   def escalate_approval
     if !self.user.manager_id.nil?
       if self.manager.manager_id.nil?
@@ -95,25 +96,26 @@ class Attendance < ActiveRecord::Base
     end
   end
 
-  def auto_approval_needed
+  def auto_approval_needed?
+    return false if !self.approval_status.nil?
     if !self.user.manager_id.nil?
       if self.user.manager.manager_id.nil?
-        if self.approval_escalation_needed
-          return true
-        end
+        return self.approval_escalation_needed?
       else
         if self.is_leave_or_wfh && self.is_escalated
           return (Date.today.beginning_of_day - self.created_at)/(60*60) > APP_CONFIG['leave_escalation_days'] * 24 * 2
         elsif !self.is_leave_or_wfh && self.is_escalated
           return (Date.today.beginning_of_day - self.created_at)/(60*60) > APP_CONFIG['wfh_escalation_days'] * 24 * 2
+        else
+          return false
         end
       end
     end
   end
 
-  # call this method only if auto_approval_needed returns true
+  # call this method only if auto_approval_needed? returns true
   def auto_approve
-    if !self.auto_approved
+    if !self.auto_approved && self.approval_status.nil?
       UserMailer.auto_approved_email(self).deliver
       self.auto_approved = true
       self.approval_status = true
@@ -146,9 +148,9 @@ class Attendance < ActiveRecord::Base
   # this method is called by cron job to escalate or auto approve the pending approvals if approval escalation is needed or auto approval is needed
   def self.auto_process()
     self.where("approval_status IS NULL").each do |leave|
-      if leave.approval_escalation_needed
+      if leave.approval_escalation_needed?
         leave.escalate_approval
-      elsif leave.auto_approval_needed
+      elsif leave.auto_approval_needed?
         leave.auto_approve
       end
     end
