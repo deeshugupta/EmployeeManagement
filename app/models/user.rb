@@ -117,6 +117,56 @@ class User < ActiveRecord::Base
     total_leaves.flatten
   end
 
+
+  def breakdown_of_leaves_for_month(month, year)
+    month_start_day = APP_CONFIG['month_start_day']
+    month_end_day = APP_CONFIG['month_end_day']
+    if month == 1
+      start_date = "#{year-1}-12-#{month_start_day.to_s.rjust(2,'0')}"
+      end_date = "#{year}-01-#{month_end_day.to_s.rjust(2,'0')}"
+    else
+      start_date = "#{year}-#{(month-1).to_s.rjust(2,'0')}-#{month_start_day.to_s.rjust(2,'0')}"
+      end_date = "#{year}-#{month.to_s.rjust(2,'0')}-#{month_end_day.to_s.rjust(2,'0')}"
+    end
+
+    leaves = self.approved_leaves.where("start_date > ? AND start_date <= ? AND end_date <= ?", start_date, end_date, end_date)
+
+    # leaves that are started before starting of month and end after starting of month
+    e_leaves_1 = self.approved_leaves.where("start_date < ? AND end_date > ?", start_date, start_date)
+    e_leaves_2 = self.approved_leaves.where("start_date <= ? AND end_date > ?", end_date, end_date)
+
+    leave_type_sick = LeaveType.find_by_name('Sick')
+    sick_leaves = leaves.where(leave_type_id: leave_type_sick.id)
+    sick_e_leaves_1 = self.approved_leaves.where("start_date < ? AND end_date > ?", start_date, start_date).where(leave_type_id: leave_type_sick.id)
+    sick_e_leaves_2 = self.approved_leaves.where("start_date <= ? AND end_date > ?", end_date, end_date).where(leave_type_id: leave_type_sick.id)
+    total_sick_leaves = (sick_leaves + sick_e_leaves_1 + sick_e_leaves_2).flatten
+    sick_leave_dates = []
+    total_sick_leaves.each do |leave|
+      sick_leave_dates << leave.start_date.upto(leave.end_date).select {|dt| !Attendance.is_uncountable_day?(self, dt)}
+    end
+
+    leave_type_casual = LeaveType.find_by_name('Casual')
+    casual_leaves = leaves.where(leave_type_id: leave_type_casual.id)
+    casual_e_leaves_1 = self.approved_leaves.where("start_date < ? AND end_date > ?", start_date, start_date).where(leave_type_id: leave_type_casual.id)
+    casual_e_leaves_2 = self.approved_leaves.where("start_date <= ? AND end_date > ?", end_date, end_date).where(leave_type_id: leave_type_casual.id)
+    total_casual_leaves = (casual_leaves + casual_e_leaves_1 + casual_e_leaves_2).flatten
+    casual_leave_dates = []
+    total_casual_leaves.each do |leave|
+      casual_leave_dates << leave.start_date.upto(leave.end_date).select {|dt| !Attendance.is_uncountable_day?(self, dt)}
+    end
+
+    leave_type_privilege = LeaveType.find_by_name('Privilege')
+    privilege_leaves = leaves.where(leave_type_id: leave_type_privilege.id)
+    privilege_e_leaves_1 = self.approved_leaves.where("start_date < ? AND end_date > ?", start_date, start_date).where(leave_type_id: leave_type_privilege.id)
+    privilege_e_leaves_2 = self.approved_leaves.where("start_date <= ? AND end_date > ?", end_date, end_date).where(leave_type_id: leave_type_privilege.id)
+    total_privilege_leaves = (privilege_leaves + privilege_e_leaves_1 + privilege_e_leaves_2).flatten
+    privilege_leave_dates = []
+    total_privilege_leaves.each do |leave|
+      privilege_leave_dates << leave.start_date.upto(leave.end_date).select {|dt| !Attendance.is_uncountable_day?(self, dt)}
+    end
+    return {"sick" => sick_leave_dates, "casual" => casual_leave_dates, "privilege" => privilege_leave_dates}
+  end
+
   def wfh_for_time_period(from_date, to_date)
     leaves = self.approved_wfhs.where("start_date > ? AND start_date <= ? AND end_date <= ?", from_date, to_date, to_date)
     leave_dates = []
