@@ -164,7 +164,7 @@ class User < ActiveRecord::Base
     total_privilege_leaves.each do |leave|
       privilege_leave_dates << leave.start_date.upto(leave.end_date).select {|dt| !Attendance.is_uncountable_day?(self, dt)}
     end
-    return {"sick" => sick_leave_dates, "casual" => casual_leave_dates, "privilege" => privilege_leave_dates}
+    return {"sick" => sick_leave_dates.flatten, "casual" => casual_leave_dates.flatten, "privilege" => privilege_leave_dates.flatten}
   end
 
   def wfh_for_time_period(from_date, to_date)
