@@ -9,6 +9,15 @@
         Email
       </th>
       <th>
+        Remaining Sick
+      </th>
+      <th>
+        Remaining Casual
+      </th>
+      <th>
+        Remaining Privilege
+      </th>
+      <th>
         Manager
       </th>
       <th>
@@ -27,6 +36,15 @@
         </td>
         <td>
           <%= team_member.email %>
+        </td>
+        <td>
+          <%= team_member.sick %>
+        </td>
+        <td>
+          <%= team_member.casual %>
+        </td>
+        <td>
+          <%= team_member.privilege %>
         </td>
         <td>
           <% if team_member.manager_id.nil? %>

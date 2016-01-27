@@ -44,7 +44,7 @@ class DashboardController < ApplicationController
 
     if !user_id.blank?
       @user_attendances = Attendance.joins(:user, :leave_type).
-          where('users.id=? and users.manager_id = ?', user_id, current_user.id)
+          where('users.id=?', user_id)
     elsif !manager_user_id.blank?
       @user_attendances = Attendance.joins(:user, :leave_type).
           where('users.manager_id = ?', manager_user_id)
@@ -56,11 +56,11 @@ class DashboardController < ApplicationController
           where('users.manager_id = ?', current_user.id)
       end
     end
-    if !start_date.nil?
+    if !start_date.blank?
       @user_attendances = @user_attendances.where('start_date >= ?', start_date)
     end
 
-    if (!end_date.nil?)
+    if !end_date.blank?
       @user_attendances = @user_attendances.where('end_date <= ?', end_date)
     end
     if !pending.nil?
@@ -128,7 +128,6 @@ class DashboardController < ApplicationController
     if (!leave_type_where.empty?)
       @user_attendances = @user_attendances.where(leave_type_where)
     end
-
     @user_attendances = @user_attendances.paginate(per_page: 10, page: params[:page])
 
     @sick = Attendance.joins(:user,:leave_type)

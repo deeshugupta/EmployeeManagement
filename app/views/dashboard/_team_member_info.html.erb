@@ -3,6 +3,12 @@
   <thead>
     <th>Member Name</th>
     <th>Email</th>
+    <td>
+      <table border="0">
+        <tr><td>Remaining</td></tr>
+        <tr><td>Sick</td><td>Casual</td><td>Privilege</td></tr>
+      </table>
+    </td>
     <th>Leaves Taken</th>
     <th>Work From Home Taken</th>
     <th>Leaves Remaining</th>
@@ -12,6 +18,11 @@
       <tr>
         <td><%=member.name%></td>
         <td><%=member.email%></td>
+        <td>
+          <table border="0" width="100%">
+            <tr><td style="text-align: center;"><%= member.sick %></td><td style="text-align: center;"><%= member.casual %></td><td style="text-align: center;"><%= member.privilege %></td></tr>
+          </table>
+        </td>
         <% leaves = member.attendances.where(:is_leave_or_wfh => true).where(:approval_status => true).sum(:days) %>
         <td><%= leaves %></td>
         <td><%= member.attendances.where(:is_leave_or_wfh => false).where(:approval_status => true).sum(:days) %></td>

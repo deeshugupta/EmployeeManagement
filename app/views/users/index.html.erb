@@ -7,6 +7,15 @@
     <th width="5%">Employee Code</th>
     <th>Manager</th>
     <th>Email</th>
+    <th>
+      Remaining Sick
+    </th>
+    <th>
+      Remaining Casual
+    </th>
+    <th>
+      Remaining Privilege
+    </th>
     <th>Date of Joining</th>
     <th>Role(s)</th>
     <th width="18%">Action</th>
@@ -18,6 +27,15 @@
         <td><%= user.employee_code %></td>
         <td><% user.manager.name if !user.manager.blank? %></td>
         <td><%= user.email %></td>
+        <td>
+          <%= user.sick %>
+        </td>
+        <td>
+          <%= user.casual %>
+        </td>
+        <td>
+          <%= user.privilege %>
+        </td>
         <td><%= user.join_date %></td>
         <td><%= user.roles.collect(&:name).join(', ') %></td>
         <td>
