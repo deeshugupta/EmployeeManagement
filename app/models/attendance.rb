@@ -81,6 +81,9 @@ class Attendance < ActiveRecord::Base
 
   def email_notification_getters
     email_getters = []
+    if self.emails_to_notify.is_a?(Array)
+      self.emails_to_notify = self.emails_to_notify.select{|email| !email.blank? }.join(",")
+    end
     if !self.emails_to_notify.blank?
       email_getters = self.emails_to_notify.scan(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i).map{|e| e[0..-1]}
     end
