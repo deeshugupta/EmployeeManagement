@@ -6,7 +6,7 @@
 <body>
 <p>
   <b><%= @attendance.is_leave_or_wfh ? "Leave" : "Work from home" %></b> Request by <b><%= @attendance.user.name %></b> has been approved from date
-  <b><%= date_format(@attendance.start_date) %></b> to <b><%=date_format(@attendance.start_date + @attendance.days.days)%></b>.
+  <b><%= date_format(@attendance.start_date) %></b> to <b><%=date_format(@attendance.end_date)%></b>.
   <br>
 </p>
 <p>

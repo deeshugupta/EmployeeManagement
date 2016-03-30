@@ -9,6 +9,10 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :manager_id, :join_date, :sick, :casual, :privilege, :roles, :employee_code
 
   validates_presence_of :email
+  validates_presence_of :sick, if: :joined_before_current_year?
+  validates_presence_of :casual, if: :joined_before_current_year?
+  validates_presence_of :privilege, if: :joined_before_current_year?
+  validates_presence_of :manager_id, if: :is_dev?
   validates_confirmation_of :password
 
   #Associations
@@ -21,6 +25,12 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :roles
 
   accepts_nested_attributes_for :roles
+
+  after_save :leaves_setup
+
+  def joined_before_current_year?
+    return self.join_date.present? && (self.join_date.year < DateTime.now.year)
+  end
 
   def approvals
     if self.is_admin?
@@ -43,15 +53,16 @@ class User < ActiveRecord::Base
   end
 
   def is_admin?
-    roles.where(name: 'admin').count != 0
+    roles.collect(&:name).include?(Role.admin.name)
   end
 
   def is_manager?
-    roles.where(name: 'Manager').count != 0
+    roles.collect(&:name).include?(Role.manager.name)
   end
 
   def is_dev?
-    roles.where(name: 'Developer').count != 0
+    roles.collect(&:name).include?(Role.developer.name)
+    # roles.where(name: 'Developer').count != 0
   end
 
   def entire_team
@@ -214,8 +225,6 @@ class User < ActiveRecord::Base
 
   def self.increment_leaves_count_for_all_employees
     self.all.each do |user|
-      user.casual += 0.6
-      user.sick += 0.6
       user.privilege += 1.5
       user.save
     end
@@ -251,5 +260,12 @@ class User < ActiveRecord::Base
     self.save
   end
 
-
+  def leaves_setup
+    if self.is_dev? && self.sick.blank? && (DateTime.now.year == self.join_date.year)
+      self.sick = ((13 - self.join_date.month) * APP_CONFIG['sick_per_month'])
+      self.casual = ((13 - self.join_date.month) * APP_CONFIG['casual_per_month'])
+      self.privilege = ((DateTime.now.month - self.join_date.month)) * 1.5
+      self.save
+    end
+  end
 end

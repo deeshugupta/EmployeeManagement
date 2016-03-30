@@ -55,4 +55,12 @@ group :development do
   gem 'xray-rails'
   gem 'thin'
   gem 'letter_opener'
+  gem 'guard-rspec', require: false
+end
+gem 'factory_girl_rails'
+group :development, :test do
+  gem 'rspec-rails', '~> 3.0'
+  gem 'cucumber-rails', :require => false
+  # database_cleaner is not required, but highly recommended
+  gem 'database_cleaner'
 end

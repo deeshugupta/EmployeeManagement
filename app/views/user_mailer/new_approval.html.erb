@@ -6,7 +6,7 @@
 <body>
 <p>
   A new Request for  <b><%= @attendance.is_leave_or_wfh ? "leave" : "work from home" %></b> has been submitted from date
-  <b><%= date_format(@attendance.start_date) %></b> to <b><%=date_format(@attendance.start_date + @attendance.days.days)%></b>
+  <b><%= date_format(@attendance.start_date) %></b> to <b><%=date_format(@attendance.end_date)%></b>
   has been submitted by <b><%=@attendance.user.name%></b>.
   <br>
   <b>Remaining <%= @attendance.leave_type.name %> Leaves</b> for this employee : <b><%= @attendance.remaining_type_leaves %></b>

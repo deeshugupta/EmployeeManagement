@@ -9,6 +9,9 @@ class Attendance < ActiveRecord::Base
 
   # t.date :start_date
   validates_presence_of :days
+  validates_presence_of :start_date
+  validates_presence_of :leave_type_id
+  validates_presence_of :is_leave_or_wfh
   # t.boolean :is_leave_or_wfh
 
   before_update do
@@ -31,6 +34,7 @@ class Attendance < ActiveRecord::Base
   end
 
   before_save do
+    self.set_end_date
     self.fix_emails_to_notify
   end
 
@@ -41,6 +45,15 @@ class Attendance < ActiveRecord::Base
 
   before_destroy do
     UserMailer.delete_request(self.manager, self).deliver
+  end
+
+  def set_end_date
+    self.days = self.days.abs
+    if self.days != 0.5
+      self.end_date= self.start_date + self.days.days - 1.days
+    else
+      self.end_date= self.start_date + self.days.days - self.days.days
+    end
   end
 
 
@@ -80,6 +93,8 @@ class Attendance < ActiveRecord::Base
       return (Date.today.beginning_of_day - self.created_at)/(60*60) > APP_CONFIG['leave_escalation_days'] * 24
     elsif !self.is_leave_or_wfh && !self.is_escalated
       return (Date.today.beginning_of_day - self.created_at)/(60*60) > APP_CONFIG['wfh_escalation_days'] * 24
+    else
+      return false
     end
   end
 
@@ -117,31 +132,33 @@ class Attendance < ActiveRecord::Base
   def auto_approve
     if !self.auto_approved && self.approval_status.nil?
       UserMailer.auto_approved_email(self).deliver
-      self.auto_approved = true
-      self.approval_status = true
-      self.save
+      self.process(nil, 'approve', 'auto_approved')
     end
   end
 
 
   def process(manager, approval_type, new_comments)
-    if (self.user.manager_id == manager.id) || (!self.user.manager.manager.nil? and self.user.manager.manager.id == manager.id) || manager.is_admin?
+    if manager.blank?
+      a_type = true
+      manager_id = nil
+    elsif (self.user.manager_id == manager.id) || (!self.user.manager.manager.nil? and self.user.manager.manager.id == manager.id) || manager.is_admin?
       a_type = nil
-      if (approval_type.eql? 'comment')
-        a_type= nil
-      elsif approval_type.eql? 'approve'
+      if approval_type.eql? 'approve'
         a_type = true
-        if self.leave_type.name == 'Casual'
-          self.user.decrement_casual_leave(self.days)
-        elsif self.leave_type.name == 'Sick'
-          self.user.decrement_sick_leave(self.days)
-        elsif self.leave_type.name == 'Privilege'
-          self.user.decrement_privilege_leave(self.days)
-        end
       else
         a_type = false
       end
-      self.update_attributes(:comments => self.comments.to_s+":##:"+new_comments.to_s, :approval_status => a_type, :processed_by => manager.id)
+      manager_id = manager.id
+    end
+    self.update_attributes(:comments => self.comments.to_s+":##:"+new_comments.to_s, :approval_status => a_type, :processed_by => manager_id)
+    if a_type == true
+      if self.leave_type.name == 'Casual'
+        self.user.decrement_casual_leave(self.actual_days)
+      elsif self.leave_type.name == 'Sick'
+        self.user.decrement_sick_leave(self.actual_days)
+      elsif self.leave_type.name == 'Privilege'
+        self.user.decrement_privilege_leave(self.actual_days)
+      end
     end
   end
 
@@ -170,5 +187,9 @@ class Attendance < ActiveRecord::Base
   def self.is_uncountable_day?(user, day)
     return true if (day.sunday? || (user.is_dev? && day.saturday?) || Holiday.is_in_between_holiday?(day))
     return false
+  end
+
+  def actual_days
+    (self.start_date..self.end_date).select{|leave_date| !Attendance.is_uncountable_day?(self.user, leave_date) }.count
   end
 end

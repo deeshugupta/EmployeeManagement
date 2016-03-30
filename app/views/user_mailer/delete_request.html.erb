@@ -6,7 +6,7 @@
 <body>
 <p>
   Request for  <b><%= @attendance.is_leave_or_wfh ? "leave" : "work from home" %></b> has been deleted from date
-  <b><%= date_format(@attendance.start_date) %></b> to <b><%=date_format(@attendance.start_date + @attendance.days.days)%></b>
+  <b><%= date_format(@attendance.start_date) %></b> to <b><%=date_format(@attendance.end_date)%></b>
   has been deleted by <b><%=@attendance.user.name%></b>.
   <br>
 </p>
