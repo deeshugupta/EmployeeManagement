@@ -11,7 +11,7 @@ class Attendance < ActiveRecord::Base
   validates_presence_of :days
   validates_presence_of :start_date
   validates_presence_of :leave_type_id
-  validates_presence_of :is_leave_or_wfh
+  validates_inclusion_of :is_leave_or_wfh, :in => [true, false]
   # t.boolean :is_leave_or_wfh
 
   before_update do
