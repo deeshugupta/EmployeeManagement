@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
   validates_presence_of :sick, if: :joined_before_current_year?
   validates_presence_of :casual, if: :joined_before_current_year?
   validates_presence_of :privilege, if: :joined_before_current_year?
+  validates_presence_of :employee_code
   validates_presence_of :manager_id, if: :is_dev?
   validates_confirmation_of :password
 
@@ -267,5 +268,39 @@ class User < ActiveRecord::Base
       self.privilege = ((DateTime.now.month - self.join_date.month)) * 1.5
       self.save
     end
+  end
+
+  def self.upload_csv_data(file_path, data_till_date)
+    data_till_date = DateTime.parse(data_till_date)
+    return "Date must be end of month" if data_till_date.beginning_of_day != data_till_date.end_of_month.beginning_of_day
+    require 'csv'
+    csv_text = File.read(file_path).encode
+    csv = CSV.parse(csv_text, :headers => true)
+    p csv.collect{|row| row.to_hash["Emp. Code"].to_i}
+    entry_data = []
+    entry_user_ids = []
+    no_entry_user_info = []
+    csv.each do |row|
+      r_hash = row.to_hash
+      user = self.find_by_employee_code(r_hash["Emp. Code"])
+      if user.blank?
+        no_entry_user_info << r_hash["Emp. Code"]
+        next
+      end
+      leaves_breakdown = user.breakdown_of_leaves_for_month(data_till_date.month + 1, Time.now.year)
+      user.sick = r_hash["SL"].to_f - leaves_breakdown["sick"].count
+      user.casual = r_hash["CL"].to_f - leaves_breakdown["casual"].count
+      user.privilege = r_hash["PL"].to_f - leaves_breakdown["privilege"].count
+
+      user.save
+      entry_data << "entry fixed for user : (ID: #{user.id})  ===  NAME: #{user.name}  ===  (EMP CODE: #{user.employee_code})"
+      entry_user_ids << user.id
+    end
+    data_not_found_for_users_in_excel_sheet = entry_user_ids.blank? ? "ALL USERS" : User.where("id NOT IN (?)", entry_user_ids)
+    return {
+      'entry_data' => entry_data,
+      'data_not_found_in_excel_sheet_for' => data_not_found_for_users_in_excel_sheet,
+      'entry_not_found_in_database_for_emp_codes_in_excel_sheet' => no_entry_user_info
+    }
   end
 end
